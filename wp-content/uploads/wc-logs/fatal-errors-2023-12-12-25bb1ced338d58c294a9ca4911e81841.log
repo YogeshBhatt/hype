@@ -1,0 +1,12 @@
+2023-12-12T04:41:39+00:00 CRITICAL require_once(): Failed opening required '../wp-load.php' (include_path='.:/usr/share/php') in /home/testsftp/hype/wp-content/themes/hyperlabs/search.php on line 46
+
+2023-12-12T04:41:43+00:00 CRITICAL require_once(): Failed opening required '../wp-load.php' (include_path='.:/usr/share/php') in /home/testsftp/hype/wp-content/themes/hyperlabs/search.php on line 46
+
+2023-12-12T04:41:44+00:00 CRITICAL require_once(): Failed opening required '../wp-load.php' (include_path='.:/usr/share/php') in /home/testsftp/hype/wp-content/themes/hyperlabs/search.php on line 46
+
+2023-12-12T05:25:26+00:00 CRITICAL syntax error, unexpected '<', expecting end of file in /home/testsftp/hype/wp-content/themes/hyperlabs/template-parts/site-header.php on line 177
+
+2023-12-12T05:25:32+00:00 CRITICAL syntax error, unexpected '<', expecting end of file in /home/testsftp/hype/wp-content/themes/hyperlabs/template-parts/site-header.php on line 177
+
+2023-12-12T05:25:54+00:00 CRITICAL syntax error, unexpected '<', expecting end of file in /home/testsftp/hype/wp-content/themes/hyperlabs/template-parts/site-header.php on line 177
+

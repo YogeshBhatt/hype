@@ -1,0 +1,42 @@
+[21-Nov-2023 17:48:27 UTC] PHP Deprecated:  Creation of dynamic property kirillbdev\WCUSCore\DB\Migrator::$collate is deprecated in /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php on line 35
+[21-Nov-2023 17:48:28 UTC] PHP Warning:  require_once(/var/www/html/vendor/autoload.php): Failed to open stream: No such file or directory in /var/www/html/wp-content/themes/hyperlabs/functions.php on line 202
+[21-Nov-2023 17:48:28 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/var/www/html/vendor/autoload.php' (include_path='.:/usr/local/lib/php') in /var/www/html/wp-content/themes/hyperlabs/functions.php:202
+Stack trace:
+#0 /var/www/html/wp-settings.php(611): include()
+#1 /var/www/html/wp-config.php(137): require_once('/var/www/html/w...')
+#2 /var/www/html/wp-load.php(50): require_once('/var/www/html/w...')
+#3 /var/www/html/wp-blog-header.php(13): require_once('/var/www/html/w...')
+#4 /var/www/html/index.php(17): require('/var/www/html/w...')
+#5 {main}
+  thrown in /var/www/html/wp-content/themes/hyperlabs/functions.php on line 202
+[22-Nov-2023 15:24:19 UTC] PHP Deprecated:  Creation of dynamic property kirillbdev\WCUSCore\DB\Migrator::$collate is deprecated in /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php on line 35
+[22-Nov-2023 15:24:21 UTC] PHP Deprecated:  Creation of dynamic property kirillbdev\WCUSCore\DB\Migrator::$collate is deprecated in /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php on line 35
+[22-Nov-2023 15:24:21 UTC] PHP Deprecated:  Creation of dynamic property kirillbdev\WCUSCore\DB\Migrator::$collate is deprecated in /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php on line 35
+[22-Nov-2023 15:24:21 UTC] PHP Deprecated:  Creation of dynamic property kirillbdev\WCUSCore\DB\Migrator::$collate is deprecated in /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php on line 35
+[22-Nov-2023 15:24:21 UTC] PHP Deprecated:  Creation of dynamic property kirillbdev\WCUSCore\DB\Migrator::$collate is deprecated in /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php on line 35
+[22-Nov-2023 16:19:26 UTC] PHP Deprecated:  Creation of dynamic property kirillbdev\WCUSCore\DB\Migrator::$collate is deprecated in /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php on line 35
+[22-Nov-2023 16:19:27 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php:35) in /var/www/html/wp-includes/pluggable.php on line 1435
+[22-Nov-2023 16:19:27 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php:35) in /var/www/html/wp-includes/pluggable.php on line 1438
+[22-Nov-2023 16:20:45 UTC] PHP Deprecated:  Creation of dynamic property kirillbdev\WCUSCore\DB\Migrator::$collate is deprecated in /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php on line 35
+[22-Nov-2023 16:20:45 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php:35) in /var/www/html/wp-includes/pluggable.php on line 1435
+[22-Nov-2023 16:20:45 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php:35) in /var/www/html/wp-includes/pluggable.php on line 1438
+[22-Nov-2023 16:21:47 UTC] PHP Deprecated:  Creation of dynamic property kirillbdev\WCUSCore\DB\Migrator::$collate is deprecated in /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php on line 35
+[22-Nov-2023 16:21:50 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php:35) in /var/www/html/wp-includes/pluggable.php on line 1435
+[22-Nov-2023 16:21:50 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php:35) in /var/www/html/wp-includes/pluggable.php on line 1438
+[22-Nov-2023 17:12:32 UTC] PHP Deprecated:  Creation of dynamic property kirillbdev\WCUSCore\DB\Migrator::$collate is deprecated in /var/www/html/wp-content/plugins/wc-ukr-shipping/vendor/kirillbdev/wcus-core/src/DB/Migrator.php on line 35
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "width" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 276
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "height" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 277
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "width" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 276
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "height" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 277
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "width" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 276
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "height" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 277
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "width" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 276
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "height" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 277
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "width" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 276
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "height" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 277
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "width" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 276
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "height" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 277
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "width" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 276
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "height" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 277
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "width" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 276
+[22-Nov-2023 17:12:34 UTC] PHP Warning:  Undefined array key "height" in /var/www/html/wp-content/plugins/woocommerce/includes/class-wc-regenerate-images.php on line 277
