@@ -128,6 +128,98 @@ $theme_settings
 				'return_format' => 'array',
 			])
 	->endRepeater()
+	->addTab('404 page options', ['placement' => 'left'])
+		->addImage('page_404_image', [
+			'label' => 'Main image for 404 page',
+			'preview_size' => 'medium',
+			'instructions' => 'Upload your image here',
+			'mime_types' => 'png, jpg, jpeg, svg',
+			'return_format' => 'array',
+		])
+		->addText('page_404_title', [
+			'label' => 'Title for 404 page',
+			'placeholder' => 'Enter title for 404 page here',
+			'instructions' => 'Enter title',
+		])
+		->addLink('page_404_button', [
+			'label' => 'Button options',
+			'instructions' => 'button configuration for 404 page'
+		])
+	->addTab('Search settings - popular searches', ['placement' => 'left'])
+	->addText('popular_searches_block_title', [
+		'label' => 'Title for popular searches block',
+		'placeholder' => 'Enter title here',
+		'instructions' => 'Enter title',
+	])
+	->addRepeater('popular_searches', [
+		'label' => 'Add popular searches',
+		'button_label' => 'Add item',
+		'layout' => 'block',
+	])
+		->addSelect('popular_search_type', [
+			'label' => 'Search Type',
+			'instructions' => 'Select the type of search.',
+			'choices' => [
+				'tag' => 'Product tag',
+				'text' => 'Search text',
+			],
+			'allow_null' => 0,
+			'multiple' => 0,
+		])
+	->addTaxonomy('popular_search_type_tag', [
+		'label' => 'Product Tag',
+		'taxonomy' => 'product_tag',
+		'field_type' => 'select', // Set the field type to 'select'
+		'return_format' => 'id',
+		'multiple' => 0, // Disable multiple selections
+		'conditional_logic' => [
+			[
+				[
+					'field' => 'popular_search_type',
+					'operator' => '==',
+					'value' => 'tag',
+				],
+			],
+		],
+	])
+
+		->addText('popular_search_type_search_query', [
+			'label' => 'Search text',
+			'placeholder' => 'Enter search text here',
+			'instructions' => 'Add search text',
+			'conditional_logic' => [
+				[
+					[
+						'field' => 'popular_search_type',
+						'operator' => '==',
+						'value' => 'text',
+					],
+				],
+			],
+		])
+	->endRepeater()
+	->addTab('Search settings - trending products', ['placement' => 'left'])
+		->addText('trending_products_block_title', [
+			'label' => 'Title for trending products  block',
+			'placeholder' => 'Enter title here',
+			'instructions' => 'Enter title',
+		])
+	->addRepeater('trending_products', [
+		'label' => 'Trending products',
+		'instructions' => 'Add up to 12 featured products',
+		'min' => 0,
+		'max' => 12,
+	])
+	->addPostObject('trending_product', [
+		'label' => 'Product',
+		'instructions' => 'Select a product',
+		'post_type' => [
+			'product'
+		],
+		'return_format' => 'id',
+		'multiple' => 0,
+	])
+	->endRepeater()
 	->setLocation('options_page', '==', 'theme-settings');
 
 add_action('acf/init', function() use ($theme_settings) {

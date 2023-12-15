@@ -1,9 +1,17 @@
 <?php
 if ( function_exists('get_field') ) {
 	$siteHeaderLogo = get_field('site_header_logo', 'option');
+	$popularSearchesBlockTitle = get_field('popular_searches_block_title', 'option');
+	$popularSearches = get_field('popular_searches', 'option');
+	$trendingProductsBlockTitle = get_field('trending_products_block_title', 'option');
+	$trendingProducts = get_field('trending_products', 'option');
 }
 ?>
+<?php 
 
+
+
+?>
 <div class="hl__header">
 	<div class="container">
 		<div class="row align-items-center">
@@ -29,7 +37,7 @@ if ( function_exists('get_field') ) {
 			</div>
 			<?php if ( $siteHeaderLogo ) : ?>
 				<div class="col-auto">
-					<a href="/">
+				<a href="<?php echo esc_url(home_url('/')); ?>?custom_techno_mini_cart_action=show_cart">
 						<img src="<?php echo $siteHeaderLogo['url']; ?>" alt="Hyperlabs logo" width="100" height="44" />
 					</a>
 				</div>
@@ -38,7 +46,8 @@ if ( function_exists('get_field') ) {
 				<div class="hl__header-right row align-items-center justify-content-end">
 					<div class="hl__header-icons col-auto row gx-3 align-items-center">
 						<div class="hl__header-icons-item col-auto order-lg-0 order-1">
-							<a href="#">
+						<?php echo do_shortcode('[quadlayers-mini-cart]'); ?>
+							<div class="">
 								<svg fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18" viewBox="0 0 37.164 37.164" xml:space="preserve">
 									<g>
 										<path d="M37.164,12.23c0-1.386-1.124-2.509-2.509-2.509h-6.327l-4.046-8.396C23.832,0.39,22.707,0,21.77,0.446
@@ -48,7 +57,7 @@ if ( function_exists('get_field') ) {
 		C36.803,13.696,37.164,13.009,37.164,12.23z M29.295,33.139H7.868l-3.038-18.4h27.503L29.295,33.139z" />
 									</g>
 								</svg>
-							</a>
+			</div>
 						</div>
 						<div class="hl__header-icons-item col-auto order-lg-1 order-0">
 							<div class="hl__open-search">
@@ -71,13 +80,28 @@ if ( function_exists('get_field') ) {
 							<?php echo do_shortcode('[gt-link lang="uk" label="Ukraine]');?>/
 							<?php echo do_shortcode('[gt-link lang="en" label="English"]');?>
 						</div>
-						<!-- <a href="#"><span>UKR</span> / <span>ENG</span></a> -->
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="hl__search">
+		<!-- <div class="hl__search-form">
+			<div class="container">
+				<div class="hl__search-form-wrap row gx-0 align-items-center">
+					<form role="search" method="get" id="search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>" class="hl__search-form-input col">
+						<input type="search" class="form-control border-0" placeholder="Пошук" aria-label="search nico" name="s" id="search-input" value="<?php echo esc_attr( get_search_query() ); ?>">
+						<input type="hidden" name="post_type" value="product" />
+					</form>
+					<div class="hl__search-form-close col-auto">
+						<img
+							src="<?php echo get_template_directory_uri(); ?>/images/svg/close-search.svg"
+							alt="Clear search form" />
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<?php ?>
 		<form class="" method="GET" id="searchform" action="<?php echo esc_url(home_url('/')); ?>">
 		<div class="hl__search-form">
 			<div class="container">
@@ -91,115 +115,93 @@ if ( function_exists('get_field') ) {
 				</div>
 			</div>
 		</div>
+		<input type="hidden" name="post_type" value="product" />
 		</form>
-		<!-- <h2>ТРЕНДОВІ ПРОДУКТИ</h2>
-		<?php $search_data = get_searchwp_live_ajax_data();
-		//  $search_data = SearchWP_Live_Ajax_Search::instance()->get_search_data();
-		// print_r($search_data);
-			// echo 'Search Query: ' . esc_html($search_data['query']);
-			// echo 'Results Found: ' . esc_html($search_data['results']);
-			$shortcode_output = do_shortcode('[popular_products]');
-			echo $shortcode_output;
-		?> -->
-		<!-- <div class="testing">dsds</div> -->
-		
+		<?php if ($popularSearches || $popularSearchesBlockTitle):?>
 		<div class="hl__search-popular">
 			<div class="container">
-				<div class="hl__search-header">ПОПУЛЯРНІ ПОШУКИ</div>
-				<div class="hl__search-popular-content">
-					<div class="swiper swiper__search-popular">
-						<div class="swiper-wrapper">
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Кроп-топ</span></a>
-							</div>
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Жилет</span></a>
-							</div>
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Светр</span></a>
-							</div>
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Унісекс светр</span></a>
-							</div>
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Футболка</span></a>
-							</div>
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Унісекс шорти</span></a>
-							</div>
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Футболка з Зеленським</span></a>
-							</div>
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Худі</span></a>
-							</div>
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Худі з Зеленською</span></a>
-							</div>
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Шарф</span></a>
-							</div>
-							<div class="swiper-slide">
-								<a href="#" class="hl__search-popular-item d-flex align-items-center justify-content-center"><span>Бейсболка</span></a>
+				<?php if ($popularSearchesBlockTitle):?>
+					<div class="hl__search-header"><?php echo $popularSearchesBlockTitle; ?></div>
+				<?php endif; ?>
+				<?php if ($popularSearches):?>
+					<div class="hl__search-popular-content">
+						<div class="swiper swiper__search-popular">
+							<div class="swiper-wrapper">
+								<?php foreach ($popularSearches as $searchItem): ?>
+									<?php $searchType = $searchItem['popular_search_type']; ?>
+									<div class="swiper-slide">
+										<?php if ($searchType === 'tag'):?>
+											<?php
+											$tagId = $searchItem['popular_search_type_tag'];
+											$term = get_term($tagId, 'product_tag');
+											?>
+											<a href="<?php echo esc_url(get_term_link($term)); ?>" class="hl__search-popular-item d-flex align-items-center justify-content-center">
+												<span><?php echo esc_html( $term->name ); ?></span>
+											</a>
+										<?php else: ?>
+											<?php
+											$searchText = $searchItem['popular_search_type_search_query'];
+											$searchUrl = home_url( '/?s=' . urlencode( $searchText ) . '&post_type=product' ); ?>
+											<a href="<?php echo esc_url( $searchUrl ); ?>" class="hl__search-popular-item d-flex align-items-center justify-content-center">
+												<span><?php echo esc_html( $searchText ); ?></span>
+											</a>
+										<?php endif; ?>
+									</div>
+								<?php endforeach; ?>
 							</div>
 						</div>
 					</div>
-				</div>
+				<?php endif; ?>
 			</div>
 		</div>
-
+		<?php endif; ?>
+		<?php if ($trendingProducts):?>
 		<div class="hl__search-trends">
 			<div class="container">
-				<div class="hl__search-header">ТРЕНДОВІ ПРОДУКТИ</div>
-				
+				<?php if ($trendingProductsBlockTitle):?>
+					<div class="hl__search-header"><?php echo $trendingProductsBlockTitle; ?></div>
+				<?php endif; ?>
 				<div class="hl__search-trends-content">
-					<a href="#" class="hl__search-trends-item d-flex align-items-center gap-3">
-						<div class="hl__search-trends-item-image">
-							<img src="images/main/trends-img1.png" alt="trends image" />
-						</div>
-						<div class="hl__search-trends-item-info">
-							<div class="hl__search-trends-item-name">
-								Кроп-светр “Незламна”
+					<?php foreach ($trendingProducts as $tp): ?>
+						<?php
+						$product_id = $tp['trending_product'];
+						$product = wc_get_product($product_id);
+
+						if (!$product) {
+							continue;
+						}
+						$image_url = wp_get_attachment_image_url($product->get_image_id(), 'full');
+						$product_link = get_permalink($product_id);
+						$product_title = get_the_title($product_id);
+						
+
+						$product_price = $product->get_price_html();
+						?>
+						<a
+							href="<?php echo $product_link; ?>"
+							class="hl__search-trends-item d-flex align-items-center gap-3">
+							<?php if ($image_url): ?>
+							<div class="hl__search-trends-item-image">
+								<img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($product_title); ?>" />
 							</div>
-							<div class="hl__search-trends-item-price">1600,00 ₴</div>
-						</div>
-					</a>
-					
-					<a href="#" class="hl__search-trends-item d-flex align-items-center gap-3">
-						<div class="hl__search-trends-item-image">
-							<img src="images/main/trends-img2.png" alt="trends image" />
-						</div>
-						<div class="hl__search-trends-item-info">
-							<div class="hl__search-trends-item-name">
-								Худі з рефлективним принтом “Цитати Президента”
+							<?php endif; ?>
+							<?php if ($product_title || $product_price): ?>
+							<div class="hl__search-trends-item-info">
+								<?php if ($product_title): ?>
+								<div class="hl__search-trends-item-name">
+									<?php echo $product_title; ?>
+								</div>
+								<?php endif; ?>
+								<?php if ($product_price): ?>
+									<div class="hl__search-trends-item-price"><?php echo wc_price($product->get_price()); ?></div>
+								<?php endif; ?>
 							</div>
-							<div class="hl__search-trends-item-price">1600,00 ₴</div>
-						</div>
-					</a>
-					<a href="#" class="hl__search-trends-item d-flex align-items-center gap-3">
-						<div class="hl__search-trends-item-image">
-							<img src="images/main/trends-img3.png" alt="trends image" />
-						</div>
-						<div class="hl__search-trends-item-info">
-							<div class="hl__search-trends-item-name">
-								Водонепроникний анорак
-							</div>
-							<div class="hl__search-trends-item-price">1600,00 ₴</div>
-						</div>
-					</a>
-					<a href="#" class="hl__search-trends-item d-flex align-items-center gap-3">
-						<div class="hl__search-trends-item-image">
-							<img src="images/main/trends-img4.png" alt="trends image" />
-						</div>
-						<div class="hl__search-trends-item-info">
-							<div class="hl__search-trends-item-name">
-								Бейсболка з хусткою “BANDERACIAGA”
-							</div>
-							<div class="hl__search-trends-item-price">1600,00 ₴</div>
-						</div>
-					</a>
+							<?php endif; ?>
+						</a>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</div>
+		<?php endif; ?>
 	</div>
 </div>

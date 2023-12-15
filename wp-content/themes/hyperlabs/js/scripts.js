@@ -84,15 +84,23 @@ const swiperProductSmall = new Swiper('.swiper__product-small', {
 const swiperProductBig = new Swiper('.swiper__product-big', {
   slidesPerView: 1,
   spaceBetween: 0,
-  rewind: true,
-  thumbs: {
-    swiper: swiperProductSmall,
+  rewind: false,
+  navigation: {
+    nextEl: ".swiper__main-hot-news-nex",
+    prevEl: ".swiper__main-hot-news-prev",
   },
   breakpoints: {
-    768: {
+    640: {
       slidesPerView: 1.2,
       spaceBetween: 0,
     },
+    1024: {
+      slidesPerView: 1.2,
+      spaceBetween: 0,
+    }
+  },
+  thumbs: {
+    swiper: swiperProductSmall,
   },
 })
 
@@ -159,7 +167,228 @@ rangeSlider &&
     }
   })
 
-// DOM LOADED
+document.addEventListener('DOMContentLoaded', () => {
+  // POPUPS
+  const state = {
+    search: false,
+    filter: false,
+    auth: false,
+    registration: false,
+    burger: false,
+  }
+
+  const fog = document.createElement('div')
+  fog.className = 'hl__fog'
+  document.body.appendChild(fog)
+  const fogElement = document.querySelector('.hl__fog')
+  fogElement.addEventListener('click', closeAll)
+
+  function closeAll() {
+    Object.keys(state).forEach((key) => {
+      state[key] = false
+    })
+
+    fogElement.classList.toggle('open', false)
+
+    allPopups.forEach((element) => {
+      element && element.classList.toggle('open', false)
+    })
+
+    document.body.style.overflow = 'auto'
+  }
+
+  function togglePopups(popupElement, popupType) {
+    const tempState = state[popupType]
+
+    closeAll()
+
+    if (tempState) {
+      document.body.style.overflow = 'auto'
+    } else {
+      document.body.style.overflow = 'hidden'
+    }
+
+    popupElement && popupElement.classList.toggle('open', !tempState)
+    fogElement.classList.toggle('open', !tempState)
+
+    popupType === 'search'
+      ? (fogElement.style.zIndex = 10)
+      : (fogElement.style.zIndex = 800)
+
+    state[popupType] = !tempState
+  }
+
+  function addToggleEventListener(elements, container, popupType) {
+    elements.forEach((element) => {
+      element &&
+        element.addEventListener('click', () => {
+          togglePopups(container, popupType)
+        })
+    })
+  }
+
+  // SEARCH
+  const searchContainer = document.querySelector('.hl__search')
+  const searchButton = document.querySelector('.hl__open-search')
+  const searchButtonBurger = document.querySelector('.hl__open-search-burger')
+  const searchCloseButton = document.querySelector('.hl__search-form-close')
+
+  addToggleEventListener(
+    [searchButton, searchCloseButton, searchButtonBurger],
+    searchContainer,
+    'search'
+  )
+
+  // FILTER
+  const filterContainer = document.querySelector('.hl__filter')
+  const filterButton = document.querySelector('.hl__filter-button')
+  const filterCloseButton = document.querySelector('.hl__filter-close')
+
+  addToggleEventListener(
+    [filterButton, filterCloseButton],
+    filterContainer,
+    'filter'
+  )
+
+  // AUTH
+  const authContainer = document.querySelector('#auth')
+  const authButton = document.querySelector('.hl__open-auth')
+  const authButtonBurger = document.querySelector('.hl__open-auth-burger')
+  const authCloseButton = document.querySelector('#authClose')
+  const authGoButton = document.querySelector('#goToAuth')
+
+  addToggleEventListener(
+    [authButton, authCloseButton, authGoButton, authButtonBurger],
+    authContainer,
+    'auth'
+  )
+
+  // REGISTRATION
+  const regContainer = document.querySelector('#registration')
+  const regCloseButton = document.querySelector('#registrationClose')
+  const regGoButton = document.querySelector('#goToRegistration')
+
+  addToggleEventListener(
+    [regCloseButton, regGoButton],
+    regContainer,
+    'registration'
+  )
+
+  // BURGER
+  const burgerContainer = document.querySelector('.hl__burger-menu')
+  const burgerButton = document.querySelector('.hl__header-burger-ico')
+  const burgerCloseButton = document.querySelector('.hl__burger-menu-close')
+
+  addToggleEventListener(
+    [burgerButton, burgerCloseButton],
+    burgerContainer,
+    'burger'
+  )
+
+  const allPopups = [
+    searchContainer,
+    filterContainer,
+    authContainer,
+    regContainer,
+    burgerContainer,
+  ]
+
+  // VALIDATION
+  function validateFields(fields) {
+    let allFieldsValid = true
+
+    fields.forEach((field) => {
+      const input = document.getElementById(field.inputId)
+      const container = input.closest('.hl__auth-item-container')
+
+      if (input.value.trim() === '') {
+        container.classList.add('error')
+        allFieldsValid = false
+      } else {
+        container.classList.remove('error')
+      }
+    })
+
+    return allFieldsValid
+  }
+
+  function updateSubmitButtonState(fields, button) {
+    button.disabled = !validateFields(fields)
+  }
+
+  // AUTH VALIDATION
+  const authFields = [
+    { inputId: 'inputAuthEmail' },
+    { inputId: 'inputAuthPassword' },
+  ]
+
+  const authSubmitButton = document.getElementById('authSubmitButton')
+
+  authFields.forEach((field) => {
+    const input = document.getElementById(field.inputId)
+
+    // input.addEventListener('input', function () {
+    //   updateSubmitButtonState(authFields, authSubmitButton)
+    // })
+  })
+
+  // REGISTRATION VALIDATION
+  const regFields = [
+    { inputId: 'inputRegEmail' },
+    { inputId: 'inputRegPassword' },
+  ]
+
+  const regSubmitButton = document.getElementById('regSubmitButton')
+
+  regFields.forEach((field) => {
+    const input = document.getElementById(field.inputId)
+
+    // input.addEventListener('input', function () {
+    //   updateSubmitButtonState(regFields, regSubmitButton)
+    // })
+  })
+
+  // FAQ
+  var faqItems = document.querySelectorAll('.hl__collections-faq-item')
+
+  faqItems &&
+    faqItems.forEach(function (item) {
+      var header = item.querySelector('.hl__collections-faq-item-header')
+
+      header.addEventListener('click', function () {
+        faqItems.forEach(function (faqItem) {
+          if (faqItem !== item) {
+            faqItem.classList.remove('open')
+          }
+        })
+
+        item.classList.toggle('open')
+      })
+    })
+})
+
+function clearFilterForm() {
+  const form = document.getElementById('filterForm')
+  form.reset()
+  rangeSlider.noUiSlider.reset()
+}
+const clearFormButton = document.getElementById('clearFormButton')
+clearFormButton && clearFormButton.addEventListener('click', clearFilterForm)
+
+// SELECT
+const genderSelect = document.getElementById('selectRegGender')
+const countrySelect = document.getElementById('selectRegCountry')
+
+genderSelect &&
+  NiceSelect.bind(genderSelect, {
+    searchable: false,
+  })
+countrySelect &&
+  NiceSelect.bind(countrySelect, {
+    searchable: false,
+  })
+
+  // DOM LOADED
 document.addEventListener('DOMContentLoaded', () => {
   // FILTER
   const fog = document.createElement('div')
@@ -185,38 +414,39 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = isOpen ? 'auto' : 'hidden'
   }
 
+
   filterElementsToToggle.forEach((element) => {
     element && element.addEventListener('click', toggleFilter)
   })
 
   // SEARCH
-  const searchFog = document.createElement('div')
-  searchFog.className = 'hl__search-fog'
-  document.body.appendChild(searchFog)
+  // const searchFog = document.createElement('div')
+  // searchFog.className = 'hl__search-fog'
+  // document.body.appendChild(searchFog)
 
-  const searchContainer = document.querySelector('.hl__search')
-  const searchFogElement = document.querySelector('.hl__search-fog')
-  const toggleSearchButtons = Array.from(
-    document.querySelectorAll(
-      '.hl__open-search, .hl__search-form-close, .hl__search-fog'
-    )
-  )
+  // const searchContainer = document.querySelector('.hl__search')
+  // const searchFogElement = document.querySelector('.hl__search-fog')
+  // const toggleSearchButtons = Array.from(
+  //   document.querySelectorAll(
+  //     '.hl__open-search, .hl__search-form-close, .hl__search-fog'
+  //   )
+  // )
 
-  function toggleSearch() {
-    const isBurgerOpen = burgerMenu.style.transform === 'translateX(0%)'
-    isBurgerOpen && toggleBurgerMenu()
-    document.body.style.overflow =
-      document.body.style.overflow === 'hidden' ? 'auto' : 'hidden'
-    const opacityValue = document.body.style.overflow === 'hidden' ? 1 : 0
-    searchFogElement.style.opacity = opacityValue
-    searchFogElement.style.pointerEvents =
-      document.body.style.overflow === 'hidden' ? 'auto' : 'none'
-    searchContainer.classList.toggle('open')
-  }
+  // function toggleSearch() {
+  //   const isBurgerOpen = burgerMenu.style.transform === 'translateX(0%)'
+  //   isBurgerOpen && toggleBurgerMenu()
+  //   document.body.style.overflow =
+  //     document.body.style.overflow === 'hidden' ? 'auto' : 'hidden'
+  //   const opacityValue = document.body.style.overflow === 'hidden' ? 1 : 0
+  //   searchFogElement.style.opacity = opacityValue
+  //   searchFogElement.style.pointerEvents =
+  //     document.body.style.overflow === 'hidden' ? 'auto' : 'none'
+  //   searchContainer.classList.toggle('open')
+  // }
 
-  toggleSearchButtons.forEach((element) => {
-    element && element.addEventListener('click', toggleSearch)
-  })
+  // toggleSearchButtons.forEach((element) => {
+  //   element && element.addEventListener('click', toggleSearch)
+  // })
 
   // BURGER
   const burgerMenu = document.querySelector('.hl__burger-menu')
@@ -263,5 +493,3 @@ function clearFilterForm() {
   form.reset()
   rangeSlider.noUiSlider.reset()
 }
-const clearFormButton = document.getElementById('clearFormButton')
-clearFormButton && clearFormButton.addEventListener('click', clearFilterForm)

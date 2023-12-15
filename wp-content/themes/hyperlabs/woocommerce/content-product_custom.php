@@ -48,7 +48,7 @@ if ( empty( $product ) || ! $product->is_visible() ) {
 				<?php the_title('<strong>', '</strong>'); ?>
 			</div>
 			<div class="hl__product-price">
-				<span><?php echo $product->get_price_html(); ?></span>
+				<span><?php echo wc_price($product->get_price()); ?></span>
 			</div>
 			<a href="<?php the_permalink(); ?>" class="hl__product-add d-inline-flex align-items-center">
 				<img

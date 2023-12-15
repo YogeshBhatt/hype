@@ -82,6 +82,25 @@
 <?php endif; ?>
 
 <?php wp_footer(); ?>
+<script>
 
+    // Function to retrieve language data
+    function getLangData() {
+       var langValue = jQuery('html').attr('lang');
+		if(langValue == 'en')
+		{
+			jQuery(".currency").text('$');
+		}else{
+			jQuery(".currency").text('₴');
+		}
+    }
+
+    // Set a timeout for 3 seconds after page reload
+    jQuery(document).ready(function() {
+      setTimeout(function() {
+        getLangData();
+      }, 2000); // 3000 milliseconds = 3 seconds
+    });
+  </script>
 </body>
 </html>

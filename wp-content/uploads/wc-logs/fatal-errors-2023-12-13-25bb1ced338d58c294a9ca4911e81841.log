@@ -1,0 +1,73 @@
+2023-12-13T06:50:20+00:00 CRITICAL syntax error, unexpected '.' in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 514
+
+2023-12-13T06:50:20+00:00 CRITICAL syntax error, unexpected '.' in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 514
+
+2023-12-13T06:50:36+00:00 CRITICAL syntax error, unexpected 'echo' (T_ECHO) in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 514
+
+2023-12-13T06:50:36+00:00 CRITICAL syntax error, unexpected 'echo' (T_ECHO) in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 514
+
+2023-12-13T06:50:48+00:00 CRITICAL syntax error, unexpected 'echo' (T_ECHO) in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 514
+
+2023-12-13T07:56:34+00:00 CRITICAL Uncaught Error: Call to undefined method WC_Product_Simple::get_available_variations() in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php:468
+Stack trace:
+#0 /home/testsftp/hype/wp-includes/class-wp-hook.php(324): custom_attribute_popup_html()
+#1 /home/testsftp/hype/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters()
+#2 /home/testsftp/hype/wp-includes/plugin.php(517): WP_Hook->do_action()
+#3 /home/testsftp/hype/wp-content/themes/hyperlabs/woocommerce/content-single-product.php(65): do_action()
+#4 /home/testsftp/hype/wp-includes/template.php(792): require('/home/testsftp/...')
+#5 /home/testsftp/hype/wp-content/plugins/woocommerce/includes/wc-core-functions.php(284): load_template()
+#6 /home/testsftp/hype/wp-content/themes/hyperlabs/woocommerce/single-product.php(37): wc_get_template_part()
+#7 /home/testsftp/hype/wp-includes/template-loader.php(106): include('/home/testsftp/...')
+#8 /home/testsftp/hype/wp-blog-header.php(19): require_once('/home/testsftp/...')
+#9 /home/testsftp/hype/index in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 468
+
+2023-12-13T07:57:32+00:00 CRITICAL Uncaught Error: Call to undefined method WC_Product_Simple::get_available_variations() in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php:468
+Stack trace:
+#0 /home/testsftp/hype/wp-includes/class-wp-hook.php(324): custom_attribute_popup_html()
+#1 /home/testsftp/hype/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters()
+#2 /home/testsftp/hype/wp-includes/plugin.php(517): WP_Hook->do_action()
+#3 /home/testsftp/hype/wp-content/themes/hyperlabs/woocommerce/content-single-product.php(65): do_action()
+#4 /home/testsftp/hype/wp-includes/template.php(792): require('/home/testsftp/...')
+#5 /home/testsftp/hype/wp-content/plugins/woocommerce/includes/wc-core-functions.php(284): load_template()
+#6 /home/testsftp/hype/wp-content/themes/hyperlabs/woocommerce/single-product.php(37): wc_get_template_part()
+#7 /home/testsftp/hype/wp-includes/template-loader.php(106): include('/home/testsftp/...')
+#8 /home/testsftp/hype/wp-blog-header.php(19): require_once('/home/testsftp/...')
+#9 /home/testsftp/hype/index in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 468
+
+2023-12-13T07:58:32+00:00 CRITICAL Uncaught Error: Call to undefined method WC_Product_Simple::get_available_variations() in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php:468
+Stack trace:
+#0 /home/testsftp/hype/wp-includes/class-wp-hook.php(324): custom_attribute_popup_html()
+#1 /home/testsftp/hype/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters()
+#2 /home/testsftp/hype/wp-includes/plugin.php(517): WP_Hook->do_action()
+#3 /home/testsftp/hype/wp-content/themes/hyperlabs/woocommerce/content-single-product.php(65): do_action()
+#4 /home/testsftp/hype/wp-includes/template.php(792): require('/home/testsftp/...')
+#5 /home/testsftp/hype/wp-content/plugins/woocommerce/includes/wc-core-functions.php(284): load_template()
+#6 /home/testsftp/hype/wp-content/themes/hyperlabs/woocommerce/single-product.php(37): wc_get_template_part()
+#7 /home/testsftp/hype/wp-includes/template-loader.php(106): include('/home/testsftp/...')
+#8 /home/testsftp/hype/wp-blog-header.php(19): require_once('/home/testsftp/...')
+#9 /home/testsftp/hype/index in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 468
+
+2023-12-13T08:10:02+00:00 CRITICAL syntax error, unexpected '}', expecting end of file in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 543
+
+2023-12-13T08:10:02+00:00 CRITICAL syntax error, unexpected '}', expecting end of file in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 543
+
+2023-12-13T08:10:11+00:00 CRITICAL syntax error, unexpected '}', expecting end of file in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 543
+
+2023-12-13T08:10:13+00:00 CRITICAL syntax error, unexpected '}', expecting end of file in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 543
+
+2023-12-13T09:23:59+00:00 CRITICAL syntax error, unexpected ')' in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 530
+
+2023-12-13T09:24:00+00:00 CRITICAL syntax error, unexpected ')' in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 530
+
+2023-12-13T09:24:07+00:00 CRITICAL syntax error, unexpected ')' in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 530
+
+2023-12-13T09:24:07+00:00 CRITICAL syntax error, unexpected ')' in /home/testsftp/hype/wp-content/themes/hyperlabs/functions.php on line 530
+
+2023-12-13T11:57:19+00:00 CRITICAL Uncaught Error: Call to undefined function custom_breadcrumbs() in /home/testsftp/hype/wp-content/themes/hyperlabs/single.php:17
+Stack trace:
+#0 /home/testsftp/hype/wp-includes/template-loader.php(106): include()
+#1 /home/testsftp/hype/wp-blog-header.php(19): require_once('/home/testsftp/...')
+#2 /home/testsftp/hype/index.php(17): require('/home/testsftp/...')
+#3 {main}
+  thrown in /home/testsftp/hype/wp-content/themes/hyperlabs/single.php on line 17
+

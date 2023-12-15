@@ -88,6 +88,7 @@ if ( woocommerce_product_loop() ) {
 	 *
 	 * @hooked wc_no_products_found - 10
 	 */
+	//do_action( 'woocommerce_before_shop_loop' );
 	do_action( 'woocommerce_no_products_found' );
 }
 
