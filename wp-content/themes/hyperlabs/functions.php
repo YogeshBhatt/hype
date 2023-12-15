@@ -361,13 +361,13 @@ function popular_product_function() {
 		'posts_per_page' => 4,
 	);
 	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post(); 
+	while ( $loop->have_posts() ) : $loop->the_post();
 	global $product; ?>
 	<div>
 	<a href="<?php the_permalink(); ?>" id="id-<?php the_id(); ?>" title="<?php the_title(); ?>">
-	
-		<?php if (has_post_thumbnail( $loop->post->ID )) 
-			echo get_the_post_thumbnail($loop->post->ID, 'shop_catalog'); 
+
+		<?php if (has_post_thumbnail( $loop->post->ID ))
+			echo get_the_post_thumbnail($loop->post->ID, 'shop_catalog');
 			else echo '<img src="'.woocommerce_placeholder_img_src().'" alt="product placeholder Image" width="65px" height="60px" />'; ?>
 
 	<h3><?php the_title(); ?></h3>
@@ -376,7 +376,7 @@ function popular_product_function() {
 	</a>
 	</div>
 	<?php endwhile; ?>
-	<?php wp_reset_query(); 
+	<?php wp_reset_query();
 }
 add_shortcode('popular_products', 'popular_product_function');
 
@@ -397,14 +397,14 @@ function custom_product_image_gallery() {
 								<path d="M26 20L17.2434 12L16 13.136L19.0123 15.872L23.5306 20L19.0123 24.128L16.0175 26.864L17.2609 28L26 20Z" fill="black"/>
 							</svg>
 						</div>
-						
+
 						<div class="swiper__main-hot-news-prev">
 							<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<circle cx="20" cy="20" r="20" fill="#A5FD48"/>
 								<path d="M26 20L17.2434 12L16 13.136L19.0123 15.872L23.5306 20L19.0123 24.128L16.0175 26.864L17.2609 28L26 20Z" fill="black"/>
 							</svg>
 						</div>
-						
+
 					</div>
 				</div>
 
@@ -443,16 +443,16 @@ function custom_product_image_gallery() {
 							<?php endforeach; ?>
 						<?php endif; ?>
 					</div>
-					
+
 				</div>
 			</div>
 	<?php
 }
 
 // To change add to cart text on single product page
-add_filter( 'woocommerce_product_single_add_to_cart_text', 'woocommerce_custom_single_add_to_cart_text' ); 
+add_filter( 'woocommerce_product_single_add_to_cart_text', 'woocommerce_custom_single_add_to_cart_text' );
 function woocommerce_custom_single_add_to_cart_text() {
-    return __( 'Додати до кошика', 'woocommerce' ); 
+    return __( 'Додати до кошика', 'woocommerce' );
 }
 
 //favorite button add
@@ -489,15 +489,15 @@ function custom_attribute_popup_html() {
     <div class="col-md-auto col-12 product_variation" id="attribute_popup">
         <div class="hl__filter-button d-flex align-items-center" >
 
-			
-			<?php 
+
+			<?php
 			$variationArray = [];
 			$variationSlugArray = [];
 			foreach($all_attribute as $key => $value)
 			{
 				// $attribute_data = $value->get_data();
 				// if($value['name'] != 'color' && $value['name'] != 'pa_color') {
-					$brand_terms = get_terms( $value['name'] );					
+					$brand_terms = get_terms( $value['name'] );
 					if (str_contains($value['name'], 'pa_')) {
 						foreach($brand_terms as $k => $v)
 						{
@@ -509,17 +509,17 @@ function custom_attribute_popup_html() {
 						foreach($variations_arr as $k => $v)
 						{
 
-							$variationArray[$value['name']][$k] = $v['attributes']['attribute_'.$value['name']];	
-							$variationSlugArray[$value['name']][$k] = $v['attributes']['attribute_'.$value['name']];						
+							$variationArray[$value['name']][$k] = $v['attributes']['attribute_'.$value['name']];
+							$variationSlugArray[$value['name']][$k] = $v['attributes']['attribute_'.$value['name']];
 						}
 					}
 				// }
 				?>
-				<?php //if($value['name'] != 'color' && $value['name'] != 'pa_color') { 
-					if(str_contains($value['name'], 'pa_')) 
+				<?php //if($value['name'] != 'color' && $value['name'] != 'pa_color') {
+					if(str_contains($value['name'], 'pa_'))
 					{
 						$name = str_replace("pa_","", $value['name']);
-						
+
 					}else{
 						$name = $value['name'];
 					}
@@ -531,17 +531,17 @@ function custom_attribute_popup_html() {
 					<?php endif;?>
 				<?php }?>
 			<?php //} ?>
-            
+
 			<?php //if(!empty($color_attribute_value)){ ?>
             <!-- <p class="single__product_color selected_attribute_list right-arrow" data-attribute-list="color">Колір:<span><?php //echo $default_variation_attributes['color'];?></span></p> -->
 			<?php //} ?>
 
         </div>
     </div>
-    
+
     <div class="hl__filter d-flex flex-column variation_popup" style="transform: translateX(100%); opacity: 0;" id="single_attribute">
         <div class="hl__filter-top col-auto d-flex justify-content-end">
-            <div class="hl__filter-close">          
+            <div class="hl__filter-close">
                 <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2.75 2.75001L27.25 27.25M2.75005 27.25L15 15L27.25 2.75" stroke="#939393" stroke-width="2.6" stroke-linecap="square"/>
                 </svg>
@@ -553,7 +553,7 @@ function custom_attribute_popup_html() {
                 <div class="hl__filter-block">
                     <div class="row gx-0 align-items-center justify-content-between">
 						  <div class="first_block">
-								<div class="col-auto">									
+								<div class="col-auto">
 									<?php foreach ($variationArray as $variationName => $variationValues):?>
 										<h2 class="title title_attr title_<?php echo $variationName;?>"><?php echo str_replace("pa_","", $variationName);?></h2>
 									<?php endforeach;?>
@@ -571,18 +571,18 @@ function custom_attribute_popup_html() {
 										<?php foreach ($variationArray as $variationName => $variationValues):?>
 										<ul style="color: white;" id="<?php echo $variationName;?>_select" class="<?php echo $variationName;?> attribute_select <?php echo ($variationName == "color" || $variationName == "pa_color") ? "color_select" : "size_select";?>">
 											<?php if($variationName == "color" || $variationName == "pa_color"):?>
-												<?php 
+												<?php
 												foreach ( $variations as $v ) {
 													$image_id  = $v['image_id'];
-												
+
 													$variation_attribute = $v['attributes'];
 													$data_attr = "";
 													$display_attr = [];
 													foreach ($variation_attribute as $attr_key => $variation_attr) {
 														if(!empty($variation_attr)){
 															$data_attr .= "data-".$attr_key."=".$variation_attr." ";
-															if($attr_key != "attribute_color" && $attr_key != "attribute_pa_color") {															
-																$display_attr[]= $variation_attr; 
+															if($attr_key != "attribute_color" && $attr_key != "attribute_pa_color") {
+																$display_attr[]= $variation_attr;
 															}
 														}
 													}
@@ -607,7 +607,7 @@ function custom_attribute_popup_html() {
 											<?php endif;?>
 										</ul>
 										<?php endforeach;?>
-                                  
+
 
 								</div>
 
@@ -626,7 +626,7 @@ add_action('woocommerce_before_add_to_cart_form', 'custom_attribute_popup_html',
 
 /*product not found */
 add_action('woocommerce_no_products_found','wc_no_products_found_custom_html',10);
-function wc_no_products_found_custom_html(){ 
+function wc_no_products_found_custom_html(){
 	$shop_page_url = get_permalink( wc_get_page_id( 'shop' ) );
 	?>
 	<div class="woocommerce-no-products-found text-center ">
@@ -653,6 +653,6 @@ function custom_mini_cart() {
 	echo '<li> <div class="widget_shopping_cart_content">';
 	woocommerce_mini_cart();
 	echo '</div></li></ul>';
-	
+
 	}
 	add_shortcode( 'quadlayers-mini-cart', 'custom_mini_cart' );

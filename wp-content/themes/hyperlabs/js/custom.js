@@ -18,7 +18,7 @@ jQuery(document).ready(function($) {
             // Set currency to $
             setCurrency('$');
             // $('.currency').text('$')
-// 
+//
         } else {
             // Set currency to another currency
             setCurrency('₴'); // Replace '€' with the desired currency symbol
@@ -63,7 +63,7 @@ jQuery(document).ready(function($) {
                 $('.currency-value-max').text($('#filter_price_max').attr('value'))
                 var replce_ctc = filter_price.split("-").map((i) => Number(i));
                 $( "#slider-range" ).slider( "values", replce_ctc );
-                
+
                 $( "#filter_price" ).val($( "#slider-range" ).slider( "values", 0 ));
                 $( "#filter_price_max" ).val($( "#slider-range" ).slider( "values", 1 ));
         }
@@ -83,8 +83,9 @@ jQuery(document).ready(function($) {
         let a_key = $(this).attr('data-attribute-list');
         let a_value = $(this).children("span").text().trim();
         default_values[a_key] = (a_value == "") ? "" :a_value;
-        
+
     });
+    console.log(default_values);
 
     $(document).on('click','.single_product_size',function(){
         Object.keys(default_values).forEach(function (attrb) {
@@ -96,23 +97,23 @@ jQuery(document).ready(function($) {
                     $("."+attrb).find("li[data-selected-attr='"+default_values[attrb]+"'] a").trigger("click");
                 } else {
                     $("."+attrb).find("li").removeClass("selected");
-                }                
+                }
             } else {
                 let selected_attr_arr_temp = "";
                 Object.keys(default_values).forEach(function (attrb) {
                     if(default_values[attrb] != "" && attrb != "color" && attrb != "pa_color") {
                        // selected_attr_arr_temp += '[data-attribute_'+attrb+'="'+default_values[attrb]+'"]';
                         selected_attr_arr_temp += "[data-attribute_"+attrb+"='"+default_values[attrb]+"']";
-                        
-                    }            
-                }); 
-               
+
+                    }
+                });
+
                 if(default_values[attrb] != "") {
                     $("."+attrb).find("li[data-selected-attr='"+default_values[attrb]+"']"+selected_attr_arr_temp+" a").trigger("click");
                 } else {
                     $("."+attrb).find("li").removeClass("selected");
-                }             
-            }           
+                }
+            }
         });
         $('.first_block').show();
         $('.first_block .title_attr').hide();
@@ -121,7 +122,7 @@ jQuery(document).ready(function($) {
         $('.first_block .title_attr.title_'+$(this).attr('data-attribute-list')).show();
         $('.first_block ul.size_select.'+$(this).attr('data-attribute-list')).show();
         $('.first_block ul.color_select.'+$(this).attr('data-attribute-list')).show();
-        $('.second_block').hide(); 
+        $('.second_block').hide();
         $("#popup_selected_color").removeClass("d-none");
         let color = "";
         if(typeof default_values['color'] != 'undefined') {
@@ -136,7 +137,7 @@ jQuery(document).ready(function($) {
         }
         //dynamic price
         setTimeout(function() {
-            var price_html = $('.single_variation_wrap .woocommerce-variation-price').html();            
+            var price_html = $('.single_variation_wrap .woocommerce-variation-price').html();
             if($('.single_variation_wrap .woocommerce-variation-price').length > 0){
                 $('#popup_price').removeClass('d-none');
                 $('#popup_price').html(price_html);
@@ -145,20 +146,21 @@ jQuery(document).ready(function($) {
                 $('#popup_price').html("");
             }
         }, 500);
-    }); 
-   
-    
+        console.log(default_values);
+    });
+
+
     $(document).on('click','.single__product_color',function(){
-       
+
         let selected_attr_arr = "";
         Object.keys(default_values).forEach(function (attrb, index) {
             if(default_values[attrb] != "" && attrb != "color" && attrb != "pa_color") {
                 selected_attr_arr += '[data-attribute_'+attrb+'="'+default_values[attrb]+'"]';
-            }            
-        }); 
+            }
+        });
         $(".color_li").hide();
-       
-        $('.color_li'+selected_attr_arr).show();  
+
+        $('.color_li'+selected_attr_arr).show();
         $("#popup_selected_color").addClass("d-none");
     });
 
@@ -167,10 +169,10 @@ jQuery(document).ready(function($) {
         var name = $(this).parent('li').attr('data-selected-attr').trim();
         $(this).parent().addClass('selected').siblings().removeClass('selected');
         $('#'+$(this).parent().attr("data-attr")).val(name);
-        $('#'+$(this).parent().attr("data-attr")).change(); 
+        $('#'+$(this).parent().attr("data-attr")).change();
         //dynamic price
         setTimeout(function() {
-            var price_html = $('.single_variation_wrap .woocommerce-variation-price').html();            
+            var price_html = $('.single_variation_wrap .woocommerce-variation-price').html();
             if($('.single_variation_wrap .woocommerce-variation-price').length > 0){
                 $('#popup_price').removeClass('d-none');
                 $('#popup_price').html(price_html);
@@ -185,19 +187,19 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         $('ul.attribute_select').each(function() {
             if($(this).children("li.selected").length > 0) {
-                let current_selected_val = $(this).children("li.selected").find('p.attr_val_p').text().trim();  
-                let current_selected_val_main = $(this).children("li.selected").find('p.attr_val_p_main').text().trim();               
+                let current_selected_val = $(this).children("li.selected").attr("data-selected-attr");//find('p.attr_val_p').text().trim();
+                let current_selected_val_main = $(this).children("li.selected").attr("data-selected-attr");//.find('p.attr_val_p_main').text().trim();
                 default_values[$(this).children("li.selected").attr("data-attr")] = current_selected_val;
                 if($(this).children("li.selected").attr("data-attr") == "color" || $(this).children("li.selected").attr("data-attr") == 'pa_color') {
                     $('#attribute_popup p[data-attribute-list="'+$(this).children("li.selected").attr("data-attr")+'"] span').css('background-color',current_selected_val_main);
                 } else {
                     $('#attribute_popup p[data-attribute-list="'+$(this).children("li.selected").attr("data-attr")+'"] span').text(current_selected_val_main);
-                }                
+                }
 
                  //variation image show
                  let current_selected_img = $(this).children("li.selected").find('img').attr('src');
                  $('.first_main_img img').attr("src",current_selected_img);
-            }            
+            }
         });
         $(".hl__fog").trigger('click');
     });
@@ -212,8 +214,7 @@ jQuery(document).ready(function($) {
         Object.keys(default_values).forEach(function (attrb) {
             $('#'+attrb).val(default_values[attrb]);$('#'+attrb).change();
         });
-    });  
+    });
 
 });
 
-  
