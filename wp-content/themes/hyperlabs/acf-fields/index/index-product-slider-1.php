@@ -14,10 +14,12 @@ $index_product_slider_1
 		'instructions' => 'Enter the text for the product link',
 		'placeholder' => 'Add the text here',
 	])
-	->addText('index_product_slider_tag', [
+	->addTaxonomy('index_product_slider_tag', [
 		'label' => 'Product Tag',
-		'instructions' => 'Enter the product tag for the slider',
-		'placeholder' => 'Add the product tag here',
+		'taxonomy' => 'product_tag',
+		'field_type' => 'select', // Set the field type to 'select'
+		'return_format' => 'id',
+		'multiple' => 0, // Disable multiple selections
 	])
 	->addSelect('quantity_of_products', [
 		'label' => 'Quantity of Products',

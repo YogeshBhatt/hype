@@ -220,6 +220,70 @@ $theme_settings
 		'multiple' => 0,
 	])
 	->endRepeater()
+	->addTab('Settings for the "Log In" form', ['placement' => 'left'])
+	->addText('login_form_title', [
+		'label' => 'Title for form',
+		'placeholder' => 'Enter title here',
+		'instructions' => 'Add title for login form',
+		'default_value' => 'Авторизуватися'
+	])
+	->addText('login_form_description', [
+		'label' => 'Description for form',
+		'placeholder' => 'Enter description here',
+		'instructions' => 'Add description for login form',
+	])
+	->addText('login_recovery_link_text', [
+		'label' => 'Password recovery link text',
+		'placeholder' => 'Enter text here',
+		'instructions' => 'Add text for recovery link',
+		'default_value' => 'Забули свій пароль?'
+	])
+	->addText('login_checkbox_text', [
+		'label' => 'Checkbox text',
+		'placeholder' => 'Enter text here',
+		'instructions' => 'Add text for checkbox',
+		'default_value' => "Запам'ятати мене"
+	])
+	->addText('login_button_title', [
+		'label' => 'Button title',
+		'placeholder' => 'Enter title here',
+		'instructions' => 'Add title for form button',
+		'default_value' => 'Авторизуватися'
+	])
+	->addWysiwyg('login_information', [
+		'label' => 'Form information',
+		'placeholder' => 'Enter text here',
+		'instructions' => 'Add text for form information block',
+	])
+	->addTab('Settings for the "Registration" form', ['placement' => 'left'])
+	->addText('reg_form_title', [
+		'label' => 'Title for form',
+		'placeholder' => 'Enter title here',
+		'instructions' => 'Add title for registration form',
+		'default_value' => 'Зареєструватись'
+	])
+	->addText('reg_form_description', [
+		'label' => 'Description for form',
+		'placeholder' => 'Enter description here',
+		'instructions' => 'Add description for registration form',
+	])
+	->addText('reg_checkbox_text', [
+		'label' => 'Checkbox text',
+		'placeholder' => 'Enter text here',
+		'instructions' => 'Add text for checkbox',
+		'default_value' => "Даю згоду на розсилку оновлень, знижок та акцій"
+	])
+	->addWysiwyg('reg_information', [
+		'label' => 'Form information',
+		'placeholder' => 'Enter text here',
+		'instructions' => 'Add text for form information block',
+	])
+	->addText('reg_button_title', [
+		'label' => 'Button title',
+		'placeholder' => 'Enter title here',
+		'instructions' => 'Add title for registration button',
+		'default_value' => 'Зареєструватись'
+	])
 	->setLocation('options_page', '==', 'theme-settings');
 
 add_action('acf/init', function() use ($theme_settings) {

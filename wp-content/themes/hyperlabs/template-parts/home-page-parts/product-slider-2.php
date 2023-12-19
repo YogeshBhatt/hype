@@ -11,13 +11,16 @@ $sectionTitle = get_field('index_product_slider_2_section_title');
 $productLinkText = get_field('product_link_text_2') ? get_field('product_link_text_2') : 'Переглянути';
 
 $productsTag = get_field('index_product_slider_2_tag');
+$productTagObject = get_term_by('id', $productsTag, 'product_tag');
+$productTagSlug = $productTagObject->slug;
+
 $productsQuantity = get_field('quantity_of_products_2');
 $limit = $productsQuantity;
 
 $args = array(
 	'post_type'      => 'product',
 	'posts_per_page' => -1,
-	'product_tag'    => $productsTag
+	'product_tag'    => $productTagSlug
 );
 
 $query = new WP_Query($args);

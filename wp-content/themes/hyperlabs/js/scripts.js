@@ -327,15 +327,16 @@ document.addEventListener('DOMContentLoaded', () => {
   authFields.forEach((field) => {
     const input = document.getElementById(field.inputId)
 
-    // input.addEventListener('input', function () {
-    //   updateSubmitButtonState(authFields, authSubmitButton)
-    // })
+    input.addEventListener('input', function () {
+      updateSubmitButtonState(authFields, authSubmitButton)
+    })
   })
 
   // REGISTRATION VALIDATION
   const regFields = [
     { inputId: 'inputRegEmail' },
     { inputId: 'inputRegPassword' },
+    { inputId: 'inputRegPasswordConfirm' },
   ]
 
   const regSubmitButton = document.getElementById('regSubmitButton')
@@ -343,9 +344,9 @@ document.addEventListener('DOMContentLoaded', () => {
   regFields.forEach((field) => {
     const input = document.getElementById(field.inputId)
 
-    // input.addEventListener('input', function () {
-    //   updateSubmitButtonState(regFields, regSubmitButton)
-    // })
+    input.addEventListener('input', function () {
+      updateSubmitButtonState(regFields, regSubmitButton)
+    })
   })
 
   // FAQ
@@ -493,3 +494,20 @@ function clearFilterForm() {
   form.reset()
   rangeSlider.noUiSlider.reset()
 }
+
+window.onload = function() {
+  // console.log('test')
+  const urlParams = new URLSearchParams(window.location.search);
+  // console.log(urlParams, urlParams.get('registered'));
+  if (urlParams.get('registered') === 'true') {
+
+    document.body.classList.add('success-popup-state');
+    // console.log('add class for body')
+
+    setTimeout(function() {
+      document.body.classList.remove('success-popup-state');
+      // console.log('remove class for body')
+      window.location.href = '/my-account';
+    }, 3000);
+  }
+};

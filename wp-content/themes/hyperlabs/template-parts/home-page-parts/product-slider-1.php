@@ -11,13 +11,16 @@
 	$productLinkText = get_field('product_link_text') ? get_field('product_link_text') : 'Переглянути';
 
 	$productsTag = get_field('index_product_slider_tag');
+	$productTagObject = get_term_by('id', $productsTag, 'product_tag');
+	$productTagSlug = $productTagObject->slug;
+
 	$productsQuantity = get_field('quantity_of_products');
 	$limit = $productsQuantity;
 
 	$args = array(
 		'post_type'      => 'product',
 		'posts_per_page' => -1,
-		'product_tag'    => $productsTag
+		'product_tag'    => $productTagSlug
 	);
 
 	$query = new WP_Query($args);
@@ -26,6 +29,7 @@
 
 <div class="hl__slider-small">
 	<div class="container">
+
 		<div
 			class="hl__slider-small-header row align-items-center justify-content-between">
 			<?php if ($sectionTitle) : ?>

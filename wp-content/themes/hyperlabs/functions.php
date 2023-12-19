@@ -143,17 +143,18 @@ function hyperlabs_scripts() {
 	wp_enqueue_style( 'hyperlabs-fonts', 'https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;0,800;1,700;1,800&family=Rock+Salt&family=Russo+One&display=swap', array(), null);
 	wp_enqueue_style( 'hyperlabs-bootstrap', get_template_directory_uri() . '/css/bootstrap.min.css', array(), _S_VERSION );
 	wp_enqueue_style( 'hyperlabs-swiper-styles', get_template_directory_uri() . '/css/swiper-bundle.min.css', array('hyperlabs-bootstrap'), _S_VERSION );
+	wp_enqueue_style( 'hyperlabs-select-styles', get_template_directory_uri() . '/css/nice-select2.css', array('hyperlabs-bootstrap'), _S_VERSION );
 	wp_enqueue_style( 'hyperlabs-style', get_template_directory_uri() . '/css/styles.css', array('hyperlabs-bootstrap'), _S_VERSION );
-	//	wp_style_add_data( 'hyperlabs-style', 'rtl', 'replace' );
+//	wp_style_add_data( 'hyperlabs-style', 'rtl', 'replace' );
 	//custom css file
 	wp_enqueue_style( 'hyperlabs-style-custom', get_template_directory_uri() . '/css/custom.css', array('hyperlabs-bootstrap'), _S_VERSION );
 
 	wp_enqueue_style( 'jquery_ui_css', get_template_directory_uri() . '/css/jquery-ui.min.css', array(), time() );
 	wp_enqueue_style( 'daterangepicker_css', get_template_directory_uri(). '/css/daterangepicker.min.css', array(), time() );
-	wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css', array(), time() );
+	// wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css', array(), time() );
 	wp_enqueue_script( 'jquery_ui_js', get_template_directory_uri(). '/js/jquery-ui.min.js', array(), time() );
 	wp_enqueue_script( 'daterangepicker_min_js', get_template_directory_uri() . '/js/daterangepicker.min.js', array(), time() );
-	wp_enqueue_script( 'select2-js', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js', array(), time() );
+	// wp_enqueue_script( 'select2-js', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js', array(), time() );
 
 	//custom js
 	wp_enqueue_script( 'hyperlabs-custom', get_template_directory_uri() . '/js/custom.js', array(), time(), true );
@@ -163,6 +164,8 @@ function hyperlabs_scripts() {
 	if ( is_page_template('templates/collections.php') ) {
 		wp_enqueue_script( 'hyperlabs-nouislider', get_template_directory_uri() . '/js/nouislider.min.js', array('hyperlabs-swiper'), _S_VERSION, true );
 	}
+
+	wp_enqueue_script( 'hyperlabs-select', get_template_directory_uri() . '/js/nice-select2.js', array('hyperlabs-swiper'), _S_VERSION, true );
 
 	wp_enqueue_script( 'hyperlabs-scripts', get_template_directory_uri() . '/js/scripts.js', array('hyperlabs-swiper'), _S_VERSION, true );
 	wp_enqueue_script( 'bootstrap-min', get_template_directory_uri() . '/js/bootstrap.min.js', array('hyperlabs-swiper'), _S_VERSION, true );
@@ -336,49 +339,6 @@ function replace_gravatar_with_acf_image($args, $id_or_email) {
 	return $args;
 }
 add_filter('pre_get_avatar_data', 'replace_gravatar_with_acf_image', 10, 2);
-
-
-function get_searchwp_live_ajax_data() {
-    // Check if the SearchWP Live Ajax Search plugin is active
-    if (class_exists('SearchWP_Live_Ajax_Search')) {
-        // Use the plugin's function to get the search data
-        $search_data = SearchWP_Live_Ajax_Search::instance()->get_search_data();
-
-        // Return the search data
-        return $search_data;
-    }
-    // Return null or false if the plugin is not active
-    return null;
-}
-
-
-function popular_product_function() {
-    // Your shortcode logic goes here
-	$args = array(
-		'post_type' => 'product',
-		'meta_key' => 'total_sales',
-		'orderby' => 'meta_value_num',
-		'posts_per_page' => 4,
-	);
-	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post();
-	global $product; ?>
-	<div>
-	<a href="<?php the_permalink(); ?>" id="id-<?php the_id(); ?>" title="<?php the_title(); ?>">
-
-		<?php if (has_post_thumbnail( $loop->post->ID ))
-			echo get_the_post_thumbnail($loop->post->ID, 'shop_catalog');
-			else echo '<img src="'.woocommerce_placeholder_img_src().'" alt="product placeholder Image" width="65px" height="60px" />'; ?>
-
-	<h3><?php the_title(); ?></h3>
-	<?php $product = wc_get_product( $loop->post->ID ); ?>
-	<h3><?php echo wc_price($product->get_price()); ?></h3>
-	</a>
-	</div>
-	<?php endwhile; ?>
-	<?php wp_reset_query();
-}
-add_shortcode('popular_products', 'popular_product_function');
 
 /*start our code*/
 // Add your custom product image and gallery structure
@@ -656,3 +616,100 @@ function custom_mini_cart() {
 
 	}
 	add_shortcode( 'quadlayers-mini-cart', 'custom_mini_cart' );
+
+/**
+ * Post per page for archive
+ */
+function hyperlabs_set_posts_per_page_for_archive( $query ) {
+	if ( !is_admin() && $query->is_main_query() && is_archive() ) {
+		$query->set( 'posts_per_page', 9 );
+	}
+}
+add_action( 'pre_get_posts', 'hyperlabs_set_posts_per_page_for_archive' );
+
+/**
+ * search results
+ */
+add_filter( 'woocommerce_redirect_single_search_result', '__return_false' );
+
+
+/**
+ * login form
+ */
+function login_with_email_address( $username ) {
+	$user = get_user_by( 'email', $username );
+	if ( !empty( $user->user_login ) ) {
+		$username = $user->user_login;
+	}
+	return $username;
+}
+add_action( 'wp_authenticate', 'login_with_email_address' );
+
+/**
+ * registration form
+ */
+function red_add_new_user() {
+	if (isset($_POST["email"]) && wp_verify_nonce($_POST['red_csrf'], 'red-csrf')) {
+		$user_login     = sanitize_user($_POST["email"]); // Используйте email в качестве логина
+		$user_email     = sanitize_email($_POST["email"]);
+		$user_first     = sanitize_text_field($_POST["first_name"]);
+		$user_last      = sanitize_text_field($_POST["last_name"]);
+		$user_pass      = $_POST["password"];
+		$pass_confirm   = $_POST["password_confirm"];
+		$country        = $_POST["country"];
+		$gender         = $_POST["gender"];
+		$mailing_list   = isset($_POST["mailing_list"]) ? 'yes' : 'no';
+
+		if (username_exists($user_login)) {
+			red_errors()->add('username_unavailable', __('Username already taken'));
+		}
+		if (!is_email($user_email)) {
+			red_errors()->add('email_invalid', __('Invalid email'));
+		}
+		if (email_exists($user_email)) {
+			red_errors()->add('email_used', __('Email already registered'));
+		}
+		if (empty($user_pass)) {
+			red_errors()->add('password_empty', __('Please enter a password'));
+		}
+		if ($user_pass != $pass_confirm) {
+			red_errors()->add('password_mismatch', __('Passwords do not match'));
+		}
+
+		$errors = red_errors()->get_error_messages();
+		if (empty($errors)) {
+			$new_user_id = wp_insert_user(array(
+				'user_login'    => $user_login,
+				'user_pass'     => $user_pass,
+				'user_email'    => $user_email,
+				'first_name'    => $user_first,
+				'last_name'     => $user_last,
+				'user_registered' => date('Y-m-d H:i:s'),
+				'role'          => 'customer'
+			));
+
+			if (!is_wp_error($new_user_id)) {
+
+				wp_set_current_user($new_user_id);
+				wp_set_auth_cookie($new_user_id);
+
+				do_action('wp_login', $user_login, get_userdata($new_user_id));
+
+//				update_user_meta($new_user_id, 'billing_country', sanitize_text_field($country));
+//				update_user_meta($new_user_id, 'shipping_country', sanitize_text_field($country));
+
+				wp_redirect(home_url('?registered=true'));
+				exit;
+			} else {
+				error_log($new_user_id->get_error_message());
+			}
+		}
+	}
+}
+add_action('init', 'red_add_new_user');
+
+function red_errors(){
+	static $wp_error;
+	return isset($wp_error) ? $wp_error : ($wp_error = new WP_Error(null, null, null));
+}
+

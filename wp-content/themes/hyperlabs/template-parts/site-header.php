@@ -7,11 +7,7 @@ if ( function_exists('get_field') ) {
 	$trendingProducts = get_field('trending_products', 'option');
 }
 ?>
-<?php 
 
-
-
-?>
 <div class="hl__header">
 	<div class="container">
 		<div class="row align-items-center">
@@ -37,7 +33,7 @@ if ( function_exists('get_field') ) {
 			</div>
 			<?php if ( $siteHeaderLogo ) : ?>
 				<div class="col-auto">
-				<a href="<?php echo esc_url(home_url('/')); ?>?custom_techno_mini_cart_action=show_cart">
+					<a href="/">
 						<img src="<?php echo $siteHeaderLogo['url']; ?>" alt="Hyperlabs logo" width="100" height="44" />
 					</a>
 				</div>
@@ -67,12 +63,34 @@ if ( function_exists('get_field') ) {
 							</div>
 						</div>
 						<div class="hl__header-icons-item col-auto order-lg-2 d-lg-block d-none">
-							<a href="#">
-								<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path fill-rule="evenodd" clip-rule="evenodd" d="M10 8.61765C11.1695 8.61765 12.1177 7.66955 12.1177 6.5C12.1177 5.33045 11.1695 4.38235 10 4.38235C8.83041 4.38235 7.88237 5.33045 7.88237 6.5C7.88237 7.66955 8.83041 8.61765 10 8.61765ZM10 10.5C12.2091 10.5 14 8.70913 14 6.5C14 4.29086 12.2091 2.5 10 2.5C7.79089 2.5 6 4.29086 6 6.5C6 8.70913 7.79089 10.5 10 10.5Z" fill="white" />
-									<path fill-rule="evenodd" clip-rule="evenodd" d="M5.95332 13.5721C5.40963 13.5721 4.96888 14.0359 4.96888 14.6081V19.5H3V14.6081C3 12.8916 4.32224 11.5 5.95332 11.5H14.0467C15.6778 11.5 17 12.8916 17 14.6081V19.5H15.0311V14.6081C15.0311 14.0359 14.5904 13.5721 14.0467 13.5721H5.95332Z" fill="white" />
-								</svg>
-							</a>
+							<?php if ( is_user_logged_in() ) : ?>
+								<a href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>">
+									<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M10 8.61765C11.1695 8.61765 12.1177 7.66955 12.1177 6.5C12.1177 5.33045 11.1695 4.38235 10 4.38235C8.83041 4.38235 7.88237 5.33045 7.88237 6.5C7.88237 7.66955 8.83041 8.61765 10 8.61765ZM10 10.5C12.2091 10.5 14 8.70913 14 6.5C14 4.29086 12.2091 2.5 10 2.5C7.79089 2.5 6 4.29086 6 6.5C6 8.70913 7.79089 10.5 10 10.5Z" fill="white" />
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M5.95332 13.5721C5.40963 13.5721 4.96888 14.0359 4.96888 14.6081V19.5H3V14.6081C3 12.8916 4.32224 11.5 5.95332 11.5H14.0467C15.6778 11.5 17 12.8916 17 14.6081V19.5H15.0311V14.6081C15.0311 14.0359 14.5904 13.5721 14.0467 13.5721H5.95332Z" fill="white" />
+									</svg>
+								</a>
+							<?php else : ?>
+								<div class="hl__open-auth">
+									<svg
+										width="20"
+										height="21"
+										viewBox="0 0 20 21"
+										fill="none"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill-rule="evenodd"
+											clip-rule="evenodd"
+											d="M10 8.61765C11.1695 8.61765 12.1177 7.66955 12.1177 6.5C12.1177 5.33045 11.1695 4.38235 10 4.38235C8.83041 4.38235 7.88237 5.33045 7.88237 6.5C7.88237 7.66955 8.83041 8.61765 10 8.61765ZM10 10.5C12.2091 10.5 14 8.70913 14 6.5C14 4.29086 12.2091 2.5 10 2.5C7.79089 2.5 6 4.29086 6 6.5C6 8.70913 7.79089 10.5 10 10.5Z"
+											fill="white" />
+										<path
+											fill-rule="evenodd"
+											clip-rule="evenodd"
+											d="M5.95332 13.5721C5.40963 13.5721 4.96888 14.0359 4.96888 14.6081V19.5H3V14.6081C3 12.8916 4.32224 11.5 5.95332 11.5H14.0467C15.6778 11.5 17 12.8916 17 14.6081V19.5H15.0311V14.6081C15.0311 14.0359 14.5904 13.5721 14.0467 13.5721H5.95332Z"
+											fill="white" />
+									</svg>
+								</div>
+							<?php endif; ?>
 						</div>
 					</div>
 					<div class="hl__header-lang col-auto d-lg-block d-none">
@@ -173,8 +191,6 @@ if ( function_exists('get_field') ) {
 						$image_url = wp_get_attachment_image_url($product->get_image_id(), 'full');
 						$product_link = get_permalink($product_id);
 						$product_title = get_the_title($product_id);
-						
-
 						$product_price = $product->get_price_html();
 						?>
 						<a
