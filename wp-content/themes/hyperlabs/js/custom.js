@@ -1,5 +1,212 @@
 jQuery(document).ready(function($) {
 
+    $('.remove-from-cart').on('click', function(e) {
+        alert('dsghds');
+        e.preventDefault();
+
+        var cartKey = $(this).data('cart-key');
+
+        $.ajax({
+            type: 'POST',
+            url: myScriptData.ajax_url,
+            data: {
+                action: 'remove_cart_item',
+                cart_key: cartKey,
+            },
+            success: function(response) {
+                // Update mini cart HTML
+                // location.reload();
+                // $('.dropdown-menu-mini-cart').html(response);
+            }
+        });
+    });
+
+    // Quantity Increase Button Click Event
+$(document).on('click', '.quantity-increase', function(e) {
+    e.preventDefault();
+    var cartKey = $(this).data('cart-key');
+    updateCartQuantity(cartKey, 'increase');
+});
+
+// Quantity Decrease Button Click Event (Assuming you have a similar block of code)
+$(document).on('click', '.quantity-decrease', function(e) {
+    e.preventDefault();
+    var cartKey = $(this).data('cart-key');
+    updateCartQuantity(cartKey, 'decrease');
+});
+
+// Function to Update Cart Quantity
+function updateCartQuantity(cartKey, action) {
+    var data = {
+        action: 'update_cart_quantity',
+        cart_key: cartKey,
+        update_action: action,
+        nonce: custom_mini_cart_params.nonce,
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: custom_mini_cart_params.ajax_url,
+        data: data,
+        success: function(response) {
+            // Update the mini cart with the refreshed content
+            $('.dropdown-menu-mini-cart').html(response);
+        }
+    });
+}
+// $(document).on('click', '.remove-from-cart', function(e) {
+// // $(".remove-from-cart").click(function(e) {
+//     console.log("ghdshdsdj");
+//      e.preventDefault();
+//      var cartKey = $(this).data("cart-key");
+//      $.ajax({
+//          type: "POST",
+//          url: custom_mini_cart_params.ajax_url,
+//          data: {
+//              action: "remove_from_cart",
+//              cart_key: cartKey,
+//              nonce: custom_mini_cart_params.nonce,
+//          },
+//          success: function(response) {
+//             location.reload();
+//              // Update the mini cart content
+//              // You may need to refresh the entire page or update specific elements based on your theme
+//              console.log(response);
+//          },
+//      });
+//  });
+// $(document).off('click').on('click', '.remove-cart-item', function(e) {
+//     e.preventDefault();
+
+//     var cartItemKey = $(this).data('cart-key');
+//     console.log(cartItemKey);
+//     // AJAX request
+//     $.ajax({
+//         type: 'POST',
+//         url: customAjax.ajaxurl,
+//         data: {
+//             action: 'custom_remove_cart_item',
+//             cart_item_key: cartItemKey,
+//         },
+//         success: function (response) {
+//             // Optional: Handle success response
+//             // $('.dropdown-menu-mini-cart').html(response);
+//             location.reload();
+//             console.log('Item removed successfully',response );
+//         },
+//         error: function (error) {
+//             // Optional: Handle error response
+//             console.log('Error removing item');
+//         }
+//     });
+// });
+
+// $(document).off('click').on('click', '.remove-item', function(e) {
+//     e.preventDefault();
+//     var cartKey = $(this).data('cart-key');
+//     alert('dsjd');
+//     // Use AJAX to remove the item from the cart
+//     $.ajax({
+//         type: 'POST',
+//         dataType: 'json',
+//         url: myScriptData.ajax_url,
+//         data: {
+//             action: 'remove_cart_item',
+//             cart_key: cartKey,
+//         },
+//         success: function(response) {
+           
+//             // Update the mini cart content
+//             // You may need to customize this based on your theme's structure
+//             // For example, you can reload the entire page or update the mini cart via AJAX
+//             location.reload();
+//         },
+//     });
+// });
+
+    // $(document).on('click', '.quantity-decrease', function(e) {
+    //     e.preventDefault();
+    //     var cartKey = $(this).data('cart-key');
+    //     var data = {
+    //         action: 'increase_cart_quantity',
+    //         cart_key: cartKey,
+    //         nonce: custom_mini_cart_params.nonce,
+    //     };
+
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: custom_mini_cart_params.ajax_url,
+    //         data: data,
+    //         success: function(response) {
+    //             // Update the mini cart with the refreshed content
+    //             $('.dropdown-menu-mini-cart').html(response);
+    //         }
+    //     });
+    // });
+    
+    // $('.remove-cart-item').off('click').on('click', function(e) {
+    //  e.preventDefault();
+
+    // var cartItemKey = $(this).data('cart-key');
+    // console.log(cartItemKey);
+    // // AJAX request
+    // $.ajax({
+    //     type: 'POST',
+    //     url: customAjax.ajaxurl,
+    //     data: {
+    //         action: 'custom_remove_cart_item',
+    //         cart_item_key: cartItemKey,
+    //     },
+    //     success: function (response) {
+    //         // Optional: Handle success response
+    //         // $('.dropdown-menu-mini-cart').html(response);
+    //         location.reload();
+    //         console.log('Item removed successfully',response );
+    //     },
+    //     error: function (error) {
+    //         // Optional: Handle error response
+    //         console.log('Error removing item');
+    //     }
+    // });
+    // });
+
+    // // Decrease quantity
+    // $('.quantity-decrease').off('click').on('click', function(e) {
+    //     e.preventDefault();
+    //     var cartKey = $(this).data('cart-key');
+    //     var quantityElement = $(this).siblings('.quantity');
+    //     var currentQuantity = parseInt(quantityElement.text());
+
+    //     if (currentQuantity > 1) {
+    //         // Update quantity in the DOM
+    //         quantityElement.text(currentQuantity - 1);
+
+    //         // Update quantity via AJAX
+    //         updateCartQuantity(cartKey, currentQuantity - 1);
+    //     }
+    // });
+
+
+    // // AJAX function to update cart quantity
+    // function updateCartQuantity(cartKey, newQuantity) {
+    //     $.ajax({
+    //         url: myScriptData.ajax_url,
+    //         type: 'POST',
+    //         data: {
+    //             action: 'update_cart_values', // Replace with your actual WordPress action hook
+    //             cart_key: cartKey,
+    //             new_quantity: newQuantity,
+    //         },
+    //         success: function(response) {
+
+    //             console.log(response);
+    //             // Handle the AJAX response
+    //             console.log('WordPress hook triggered successfully.');
+    //         },
+    //     });
+       
+    // }
+
     $('.langauge').on('click', function(event) {
         var currency = $( ".gt-current-lang" ).attr( "data-gt-lang" );
         if(currency ===  'uk')
@@ -151,7 +358,6 @@ jQuery(document).ready(function($) {
 
 
     $(document).on('click','.single__product_color',function(){
-
         let selected_attr_arr = "";
         Object.keys(default_values).forEach(function (attrb, index) {
             if(default_values[attrb] != "" && attrb != "color" && attrb != "pa_color") {
@@ -191,6 +397,7 @@ jQuery(document).ready(function($) {
                 let current_selected_val_main = $(this).children("li.selected").attr("data-selected-attr");//.find('p.attr_val_p_main').text().trim();
                 default_values[$(this).children("li.selected").attr("data-attr")] = current_selected_val;
                 if($(this).children("li.selected").attr("data-attr") == "color" || $(this).children("li.selected").attr("data-attr") == 'pa_color') {
+                    console.log(current_selected_val_main);
                     $('#attribute_popup p[data-attribute-list="'+$(this).children("li.selected").attr("data-attr")+'"] span').css('background-color',current_selected_val_main);
                 } else {
                     $('#attribute_popup p[data-attribute-list="'+$(this).children("li.selected").attr("data-attr")+'"] span').text(current_selected_val_main);
@@ -215,6 +422,8 @@ jQuery(document).ready(function($) {
             $('#'+attrb).val(default_values[attrb]);$('#'+attrb).change();
         });
     });
+
+
 
 });
 

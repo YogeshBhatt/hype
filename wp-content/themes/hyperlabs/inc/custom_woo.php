@@ -1,4 +1,9 @@
 <?php
+
+function mytheme_add_woocommerce_support() {
+    add_theme_support( 'woocommerce' );
+}
+add_action( 'after_setup_theme', 'mytheme_add_woocommerce_support' );
 /**
  * Post per page for archive
  */
@@ -475,3 +480,132 @@ function custom_breadcrum_for_mobile(){
     woocommerce_breadcrumb();
     echo '</div>';
 }
+
+/*checkout page start */
+add_filter( 'woocommerce_order_button_text', 'wc_custom_order_button_text' ); 
+
+function wc_custom_order_button_text() {
+    return __( 'Перейти до оплати', 'woocommerce' ); 
+}
+
+add_filter( 'woocommerce_checkout_fields', 'custom_hook_checkout_fields' );
+function custom_hook_checkout_fields( $checkout_fields ) {
+   
+
+  unset($checkout_fields['billing']['billing_company']); 
+  unset($checkout_fields['billing']['billing_address_2']); 
+  unset($checkout_fields['billing']['billing_city']); 
+  unset($checkout_fields['billing']['billing_state']);
+  unset($checkout_fields['order']['order_comments']);
+  //unset($checkout_fields['billing']['billing_postcode']);
+
+  $checkout_fields['billing']['billing_address_1']['label'] = 'Street / House number / Apartment number';
+
+  
+
+  $checkout_fields[ 'billing' ][ 'billing_country' ][ 'priority' ] = 6;
+  $checkout_fields[ 'billing' ][ 'billing_address_1' ][ 'priority' ] = 30;
+  $checkout_fields[ 'billing' ][ 'billing_phone' ][ 'priority' ] = 40;
+
+  //required
+
+  $checkout_fields['billing']['billing_email']['required'] = false;
+  $checkout_fields['billing']['billing_country']['required'] = false;
+  $checkout_fields['billing']['billing_phone']['required'] = true;
+  $checkout_fields['billing']['billing_first_name']['required'] = true;
+  $checkout_fields['billing']['billing_last_name']['required'] = true;
+  $checkout_fields['billing']['billing_address_1']['required'] = false;
+
+
+  $checkout_fields['billing']['billing_backyard'] = array(
+    'label'       => __('Backyard', 'woocommerce'),
+    'placeholder' => _x('Select', 'placeholder', 'woocommerce'),
+    'required'    => true,
+    'clear'       => false,
+    'priority'    =>41,
+    'type'        => 'select',
+    'options'     => array(
+        ''          => __('Select', 'woocommerce'),
+        'eat-meat' => __('Warsaw', 'woocommerce' ),
+        'not-meat' => __('Warsaw 2', 'woocommerce' )
+        )
+    );
+  return $checkout_fields;
+}
+
+/* Limit Woocommerce phone field to 10 digits number 
+add_action('woocommerce_checkout_process', 'custom_checkout_field_process');
+function custom_checkout_field_process() {
+    global $woocommerce;
+    $pattern = '/^\+\d{2}\s\d{3}\s\d{3}\s\d{3}$/';
+    if (!(preg_match($pattern, $_POST['billing_phone'] ))){
+        wc_add_notice( "Incorrect Phone Number! Please enter valid phone number"  ,'error' );
+    }
+} */
+
+add_action('woocommerce_review_order_before_payment','save_address_details_show');
+function save_address_details_show(){ ?>
+  <h2><b>Адреса доставки</b></h2>
+   <p id="save_name"></p>
+   <p id="save_address"></p>
+   <p id="save_number"></p>
+   <p id="save_email"></p>
+   <?php
+} 
+
+add_action( 'woocommerce_before_checkout_form', 'custom_brudcrum_checkout_page', 9 );
+function custom_brudcrum_checkout_page(){ ?>
+      <h3>
+        <a href="#"><span id="delivery_info" style="color:black">Iнформація про доставку</span ></a>
+        <span id="delivery_payment_info" style="color:gray" > > Оплата</span>
+      </h3>
+ <?php }
+
+/*add new bonus code field */
+add_action( 'woocommerce_checkout_before_customer_details', 'custom_checkout_fields_before_billing_details', 5 );
+function custom_checkout_fields_before_billing_details(){
+    $domain = 'woocommerce';
+    $checkout = WC()->checkout;
+    woocommerce_form_field( 'bill_custom_bonus_code_field_name', array(
+        'type'          => 'text',
+        'label'         => __('Enter the bonus code', $domain ),
+        'class'         => array('form-row'),
+        'priority'      =>5,
+    ), $checkout->get_value( '_custom_bonus_code_field_name' ) );
+
+    woocommerce_form_field( 'bill_index_field_name', array(
+        'type'          => 'text',
+        'label'         => __('index', $domain ),
+        'class'         => array('form-row'),
+        'priority'      =>109,
+    ), $checkout->get_value( 'bill_index_field_name' ) );
+
+    woocommerce_form_field( 'custom_checkout_radio', array(
+        'type' => 'radio',
+        'class' => array( 'form-row' ),
+        'label'         => __('', $domain ),
+        'options' => array('option_one' => 'Ukrposhta','option_two' => 'New post',),
+        'priority'      =>7,
+        'default'  => 'option_one',
+        ), $checkout->get_value('custom_checkout_radio'));
+    
+}
+// Save custom checkout fields the data to the order
+add_action( 'woocommerce_checkout_create_order', 'custom_checkout_field_update_meta', 10, 2 );
+function custom_checkout_field_update_meta( $order, $data ){
+    if( isset($_POST['bill_custom_bonus_code_field_name']) && ! empty($_POST['bill_custom_bonus_code_field_name']) ){
+        $order->update_meta_data( 'bill_custom_bonus_code_field_name', sanitize_text_field( $_POST['bill_custom_bonus_code_field_name'] ) );
+    }
+    if( isset($_POST['custom_checkout_radio']) && ! empty($_POST['custom_checkout_radio']) ){
+        $order->update_meta_data( 'custom_checkout_radio', sanitize_text_field( $_POST['custom_checkout_radio'] ) );
+    }
+    if( isset($_POST['bill_index_field_name']) && ! empty($_POST['bill_index_field_name']) ){
+        $order->update_meta_data( 'bill_index_field_name', sanitize_text_field( $_POST['bill_index_field_name'] ) );
+    }
+    if( isset($_POST['billing_backyard']) && ! empty($_POST['billing_backyard']) ){
+        $order->update_meta_data( 'billing_backyard', sanitize_text_field( $_POST['billing_backyard'] ) );
+    }
+}
+
+
+

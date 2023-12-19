@@ -158,6 +158,8 @@ function hyperlabs_scripts() {
 
 	//custom js
 	wp_enqueue_script( 'hyperlabs-custom', get_template_directory_uri() . '/js/custom.js', array(), time(), true );
+	wp_enqueue_script( 'hyperlabs-custom-teq', get_template_directory_uri() . '/js/teq_custom.js', array(), time(), true );
+
 //	wp_enqueue_script( 'hyperlabs-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
 	wp_enqueue_script( 'hyperlabs-swiper', get_template_directory_uri() . '/js/swiper-bundle.min.js', array(), _S_VERSION, true );
 
@@ -177,8 +179,30 @@ function hyperlabs_scripts() {
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
+	// wp_enqueue_script(
+	// 	'custom-single-product', // name your script so that you can attach other scripts and de-register, etc.
+	// 	get_stylesheet_directory_uri() . '/js/custom.js', // this is the location of your script file
+	// 	array('jquery') // this array lists the scripts upon which your script depends
+	//  );
+	 wp_enqueue_script('quantity-field', get_stylesheet_directory_uri() . '/js/custom.js', array('jquery'), null, true);
+	wp_localize_script('quantity-field', 'myScriptData', array(
+		'siteUrl' => get_site_url(),
+		'ajaxUrl' => admin_url('admin-ajax.php'),
+	));
 }
+
 add_action( 'wp_enqueue_scripts', 'hyperlabs_scripts' );
+
+function enqueue_custom_mini_cart_script() {
+    wp_enqueue_script('custom-mini-cart-script', get_template_directory_uri() . '/js/custom.js', array('jquery'), null, true);
+    wp_localize_script('custom-mini-cart-script', 'custom_mini_cart_params', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce'    => wp_create_nonce('custom_mini_cart_nonce'),
+    ));
+}
+add_action('wp_enqueue_scripts', 'enqueue_custom_mini_cart_script');
+
+
 
 /**
  * Implement the Custom Header feature.
@@ -599,33 +623,36 @@ function wc_no_products_found_custom_html(){
 <?php
 }
 
-
 function custom_mini_cart() {
-	echo '<a href="#" class="dropdown-back" data-toggle="dropdown"> ';
-	echo '<i class="fa fa-shopping-cart" aria-hidden="true"></i>';
-	echo '<div class="basket-item-count" style="display: inline;">';
-	echo '<div class="cart-items-count count">';
-	echo WC()->cart->get_cart_contents_count();
-	echo '</div>';
-	echo '</div>';
-	echo '</a>';
-	echo '<ul class="dropdown-menu dropdown-menu-mini-cart">';
-	echo '<li> <div class="widget_shopping_cart_content">';
-	woocommerce_mini_cart();
-	echo '</div></li></ul>';
+// 	echo '<a href="#" class="dropdown-back" data-toggle="dropdown"> ';
+//     echo '<i class="fa fa-shopping-cart" aria-hidden="true"></i>';
+//     echo '</a>';
+	echo '<div class="hl__minicard"> <div class="hl__minicard-top col-auto d-flex justify-content-end"> <div class="hl__minicard-close">
+		<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path d="M2.75 2.75001L27.25 27.25M2.75005 27.25L15 15L27.25 2.75" stroke="#939393" stroke-width="2.6" stroke-linecap="square"></path></svg>
+		</div></div>';
 
-	}
-	add_shortcode( 'quadlayers-mini-cart', 'custom_mini_cart' );
+//     echo '<div class="hl_minicard_dropdown">';
+    echo '<div class="widget_shopping_cart_content hl_minicard_wrap col d-flex flex-column justify-content-between"> 
+    <div class="hl__filter-block"> <h2  class="hl_title">Кошик для покупок</h2> </div>
+    ';
+	// woocommerce-mini-cart-item mini_cart_item
+    
+	woocommerce_mini_cart();
+//     echo '</div>';
+    echo '</div> </div>';
+}
+add_shortcode( 'quadlayers-mini-cart', 'custom_mini_cart' );
 
 /**
  * Post per page for archive
  */
-function hyperlabs_set_posts_per_page_for_archive( $query ) {
-	if ( !is_admin() && $query->is_main_query() && is_archive() ) {
-		$query->set( 'posts_per_page', 9 );
-	}
-}
-add_action( 'pre_get_posts', 'hyperlabs_set_posts_per_page_for_archive' );
+// function hyperlabs_set_posts_per_page_for_archive( $query ) {
+// 	if ( !is_admin() && $query->is_main_query() && is_archive() ) {
+// 		$query->set( 'posts_per_page', 9 );
+// 	}
+// }
+// add_action( 'pre_get_posts', 'hyperlabs_set_posts_per_page_for_archive' );
 
 /**
  * search results
@@ -713,3 +740,57 @@ function red_errors(){
 	return isset($wp_error) ? $wp_error : ($wp_error = new WP_Error(null, null, null));
 }
 
+function update_cart_quantity() {
+	check_ajax_referer('custom_mini_cart_nonce', 'nonce');
+
+	$cart_key = sanitize_text_field($_POST['cart_key']);
+	$update_action = sanitize_text_field($_POST['update_action']);
+	$cart_item = WC()->cart->get_cart_item($cart_key);
+
+	if ($cart_item) {
+		if ($update_action === 'increase') {
+			WC()->cart->set_quantity($cart_key, $cart_item['quantity'] + 1);
+		} elseif ($update_action === 'decrease') {
+			WC()->cart->set_quantity($cart_key, max(1, $cart_item['quantity'] - 1));
+		}
+	}
+
+	// Output the updated mini cart
+	woocommerce_mini_cart();
+
+	wp_die();
+}
+add_action('wp_ajax_update_cart_quantity', 'update_cart_quantity');
+add_action('wp_ajax_nopriv_update_cart_quantity', 'update_cart_quantity');
+
+function custom_content_after_breadcrumb() {
+    if ( is_product_category() ) {
+
+		$current_category = get_queried_object();
+		//print_r($current_category);
+// Check if it's a category page
+	if (is_a($current_category, 'WP_Term') && taxonomy_exists('product_cat')) {
+		// Get the term ID of the current category
+		$term_id = $current_category->term_id;
+
+		// Output the term ID
+		$category_thumbnail = get_term_meta($term_id, 'thumbnail_id', true);
+
+	}
+       ?>
+        <div class="hl__collection-image">
+            <div class="hl__collection-image-back">
+			<?php echo wp_get_attachment_image($category_thumbnail, 'full'); ?>
+            </div>
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                <div class="col-auto">
+                    <div class="hl__collection-image-title"><?php echo $current_category->name; ?></div>
+                </div>
+                </div>
+          </div>
+        </div>
+        <?php
+    }
+}
+add_action('woocommerce_before_main_content', 'custom_content_after_breadcrumb',21);

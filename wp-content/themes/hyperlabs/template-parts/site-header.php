@@ -42,8 +42,7 @@ if ( function_exists('get_field') ) {
 				<div class="hl__header-right row align-items-center justify-content-end">
 					<div class="hl__header-icons col-auto row gx-3 align-items-center">
 						<div class="hl__header-icons-item col-auto order-lg-0 order-1">
-						<?php echo do_shortcode('[quadlayers-mini-cart]'); ?>
-							<div class="">
+							<div class="hl__minicard_icon">
 								<svg fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18" viewBox="0 0 37.164 37.164" xml:space="preserve">
 									<g>
 										<path d="M37.164,12.23c0-1.386-1.124-2.509-2.509-2.509h-6.327l-4.046-8.396C23.832,0.39,22.707,0,21.77,0.446
@@ -53,7 +52,10 @@ if ( function_exists('get_field') ) {
 		C36.803,13.696,37.164,13.009,37.164,12.23z M29.295,33.139H7.868l-3.038-18.4h27.503L29.295,33.139z" />
 									</g>
 								</svg>
-			</div>
+							</div>
+							
+							<?php echo do_shortcode('[quadlayers-mini-cart]'); ?>
+
 						</div>
 						<div class="hl__header-icons-item col-auto order-lg-1 order-0">
 							<div class="hl__open-search">
