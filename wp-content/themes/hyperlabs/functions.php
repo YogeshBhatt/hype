@@ -145,7 +145,7 @@ function hyperlabs_scripts() {
 	wp_enqueue_style( 'hyperlabs-swiper-styles', get_template_directory_uri() . '/css/swiper-bundle.min.css', array('hyperlabs-bootstrap'), _S_VERSION );
 	wp_enqueue_style( 'hyperlabs-select-styles', get_template_directory_uri() . '/css/nice-select2.css', array('hyperlabs-bootstrap'), _S_VERSION );
 	wp_enqueue_style( 'hyperlabs-style', get_template_directory_uri() . '/css/styles.css', array('hyperlabs-bootstrap'), _S_VERSION );
-//	wp_style_add_data( 'hyperlabs-style', 'rtl', 'replace' );
+	//	wp_style_add_data( 'hyperlabs-style', 'rtl', 'replace' );
 	//custom css file
 	wp_enqueue_style( 'hyperlabs-style-custom', get_template_directory_uri() . '/css/custom.css', array('hyperlabs-bootstrap'), _S_VERSION );
 
@@ -189,7 +189,7 @@ function hyperlabs_scripts() {
 		'siteUrl' => get_site_url(),
 		'ajaxUrl' => admin_url('admin-ajax.php'),
 	));
-	
+
 }
 
 add_action( 'wp_enqueue_scripts', 'hyperlabs_scripts' );
@@ -253,56 +253,14 @@ require_once get_template_directory() . '/acf-fields/user-settings.php';
 require_once get_template_directory() . '/acf-fields/index/index.php';
 require_once get_template_directory() . '/acf-fields/collections/collections-all-fields.php';
 
+/**
+ * Register Custom Navigation Walker
+ */
+require_once get_template_directory() . '/costume-functions/costume-munus.php';
 
-//Custom menus
-
-class Header_Walker_Nav_Menu extends Walker_Nav_Menu {
-	function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0) {
-		$url = esc_attr($item->url);
-		$title = esc_html($item->title);
-
-		// Получаем пользовательский класс и добавляем '-item'
-		$item_class = !empty($args->menu_class) ? $args->menu_class . '-item' : 'menu-item';
-
-		// Преобразуем массив классов элемента в строку
-		$wp_classes = join(' ', apply_filters('nav_menu_css_class', array_filter($item->classes), $item, $args));
-		$wp_classes = $wp_classes ? ' ' . $wp_classes : '';
-
-		$output .= "<div class='{$item_class}{$wp_classes} col-auto'><a href='{$url}'>{$title}</a></div>";
-	}
-}
-
-class Footer_Walker_Nav_Menu extends Walker_Nav_Menu {
-	function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0) {
-		$url = esc_attr($item->url);
-		$title = esc_html($item->title);
-
-		$item_class = !empty($args->menu_class) ? $args->menu_class . '-item' : 'menu-item';
-		$link_class = !empty($args->menu_class) ? $args->menu_class : 'menu-link';
-
-		$wp_classes = join(' ', apply_filters('nav_menu_css_class', array_filter($item->classes), $item, $args));
-		$wp_classes = $wp_classes ? ' ' . $wp_classes : '';
-
-		$output .= "<div class='{$item_class}{$wp_classes}'><a class='{$link_class}' href='{$url}'>{$title}</a></div>";
-	}
-}
-
-class Header_Mobile_Walker_Nav_Menu extends Walker_Nav_Menu {
-	function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0) {
-		$url = esc_attr($item->url);
-		$title = esc_html($item->title);
-
-		$item_class = !empty($args->menu_class) ? $args->menu_class . '-item' : 'menu-item';
-
-		$wp_classes = join(' ', apply_filters('nav_menu_css_class', array_filter($item->classes), $item, $args));
-		$wp_classes = $wp_classes ? ' ' . $wp_classes : '';
-
-		$output .= "<div class='{$item_class}{$wp_classes}'><a href='{$url}'>{$title}</a></div>";
-	}
-}
-
-
-//fix svg uploads
+/**
+ * Add SVG to allowed file uploads
+ */
 function add_file_types_to_uploads($file_types){
 	$new_filetypes = array();
 	$new_filetypes['svg'] = 'image/svg+xml';
@@ -311,60 +269,35 @@ function add_file_types_to_uploads($file_types){
 }
 add_filter('upload_mimes', 'add_file_types_to_uploads');
 
-//Custom Breadcrumbs
-function custom_breadcrumbs($category) {
-	echo '<div class="hl__breadcrumbs"><div class="container"><div class="hl__breadcrumbs-wrap d-flex align-items-center">';
-	echo '<div class="hl__breadcrumbs-item d-flex align-items-center"><a href="' . home_url() . '">' . get_bloginfo('name') . '</a></div>';
-	if ($category) {
-		$category_link = get_category_link($category->term_id);
-		$category_name = $category->name;
-
-		echo '<div class="hl__breadcrumbs-item d-flex align-items-center"><a href="' . esc_url($category_link) . '">' . esc_html($category_name) . '</a></div>';
-		if (is_single()) {
-			echo '<div class="hl__breadcrumbs-item d-flex align-items-center"><span>' . get_the_title() . '</span></div>';
-		}
-	} elseif (is_page()) {
-		echo '<div class="hl__breadcrumbs-item d-flex align-items-center"><span>' . get_the_title() . '</span></div>';
-	}
-	echo '</div></div></div>';
-}
-
+/**
+ * costume breadcrumbs function
+ */
+require_once get_template_directory() . '/costume-functions/costume-breadcrumbs-function.php';
 
 /**
- * Disable Gravatar note in WP Profile settings and add custom image with ACF
+ * costume profile avatar functions
  */
-function replace_gravatar_with_acf_image($args, $id_or_email) {
-	$user_id = is_numeric($id_or_email) ? $id_or_email : false;
-	$user = false;
+require_once get_template_directory() . '/costume-functions/costume-profile-avatar-function.php';
 
-	if ($id_or_email instanceof WP_User) {
-		$user_id = $id_or_email->ID;
-	} elseif ($id_or_email instanceof WP_Post) {
-		$user_id = $id_or_email->post_author;
-	} elseif ($id_or_email instanceof WP_Comment) {
-		if (!empty($id_or_email->user_id)) {
-			$user_id = $id_or_email->user_id;
-		}
-	} elseif (is_email($id_or_email)) {
-		$user = get_user_by('email', $id_or_email);
-		if ($user) {
-			$user_id = $user->ID;
-		}
-	}
-	if ($user_id) {
-		$custom_image = get_field('author_custom_image', 'user_' . $user_id);
-		if ($custom_image) {
-			$args['url'] = $custom_image;
-			$args['url_2x'] = $custom_image;
-			// Убрать ссылку на Gravatar
-			add_filter('user_profile_picture_description', '__return_empty_string');
-		}
-	}
+/**
+ * costume search functions
+ */
+require_once get_template_directory() . '/costume-functions/costume-search-function.php';
 
-	return $args;
-}
-add_filter('pre_get_avatar_data', 'replace_gravatar_with_acf_image', 10, 2);
+/**
+ * costume post quantity functions
+ */
+//require_once get_template_directory() . '/costume-functions/index-news-slider-post.php';
 
+/**
+ * Custom login form function
+ */
+require_once get_template_directory() . '/costume-functions/costume-login-form-function.php';
+
+/**
+ * Custom registration form function
+ */
+require_once get_template_directory() . '/costume-functions/costume-registration-function.php';
 /*start our code*/
 // Add your custom product image and gallery structure
 remove_action('woocommerce_before_single_product_summary', 'woocommerce_show_product_images', 20);
@@ -636,7 +569,7 @@ function custom_mini_cart() {
 //     echo '<div class="hl_minicard_dropdown">';
     echo '<div class="widget_shopping_cart_content "> ';
 	// woocommerce-mini-cart-item mini_cart_item
-    
+
 	woocommerce_mini_cart();
 //     echo '</div>';
     echo '</div> </div>';
@@ -660,85 +593,14 @@ add_filter( 'woocommerce_redirect_single_search_result', '__return_false' );
 
 
 /**
- * login form
+ * Custom lost password form function
  */
-function login_with_email_address( $username ) {
-	$user = get_user_by( 'email', $username );
-	if ( !empty( $user->user_login ) ) {
-		$username = $user->user_login;
-	}
-	return $username;
-}
-add_action( 'wp_authenticate', 'login_with_email_address' );
+require_once get_template_directory() . '/costume-functions/costume-lost-password-function.php';
 
 /**
- * registration form
+ * Custom woo functions
  */
-function red_add_new_user() {
-	if (isset($_POST["email"]) && wp_verify_nonce($_POST['red_csrf'], 'red-csrf')) {
-		$user_login     = sanitize_user($_POST["email"]); // Используйте email в качестве логина
-		$user_email     = sanitize_email($_POST["email"]);
-		$user_first     = sanitize_text_field($_POST["first_name"]);
-		$user_last      = sanitize_text_field($_POST["last_name"]);
-		$user_pass      = $_POST["password"];
-		$pass_confirm   = $_POST["password_confirm"];
-		$country        = $_POST["country"];
-		$gender         = $_POST["gender"];
-		$mailing_list   = isset($_POST["mailing_list"]) ? 'yes' : 'no';
-
-		if (username_exists($user_login)) {
-			red_errors()->add('username_unavailable', __('Username already taken'));
-		}
-		if (!is_email($user_email)) {
-			red_errors()->add('email_invalid', __('Invalid email'));
-		}
-		if (email_exists($user_email)) {
-			red_errors()->add('email_used', __('Email already registered'));
-		}
-		if (empty($user_pass)) {
-			red_errors()->add('password_empty', __('Please enter a password'));
-		}
-		if ($user_pass != $pass_confirm) {
-			red_errors()->add('password_mismatch', __('Passwords do not match'));
-		}
-
-		$errors = red_errors()->get_error_messages();
-		if (empty($errors)) {
-			$new_user_id = wp_insert_user(array(
-				'user_login'    => $user_login,
-				'user_pass'     => $user_pass,
-				'user_email'    => $user_email,
-				'first_name'    => $user_first,
-				'last_name'     => $user_last,
-				'user_registered' => date('Y-m-d H:i:s'),
-				'role'          => 'customer'
-			));
-
-			if (!is_wp_error($new_user_id)) {
-
-				wp_set_current_user($new_user_id);
-				wp_set_auth_cookie($new_user_id);
-
-				do_action('wp_login', $user_login, get_userdata($new_user_id));
-
-//				update_user_meta($new_user_id, 'billing_country', sanitize_text_field($country));
-//				update_user_meta($new_user_id, 'shipping_country', sanitize_text_field($country));
-
-				wp_redirect(home_url('?registered=true'));
-				exit;
-			} else {
-				error_log($new_user_id->get_error_message());
-			}
-		}
-	}
-}
-add_action('init', 'red_add_new_user');
-
-function red_errors(){
-	static $wp_error;
-	return isset($wp_error) ? $wp_error : ($wp_error = new WP_Error(null, null, null));
-}
-
+require_once get_template_directory() . '/costume-functions/costume-woo-functions.php';
 function update_cart_quantity() {
 	check_ajax_referer('custom_mini_cart_nonce', 'nonce');
 

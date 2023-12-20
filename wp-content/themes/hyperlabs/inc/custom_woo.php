@@ -5,24 +5,24 @@
 function hyperlabs_set_posts_per_page_for_archive( $query ) {
 	if ( !is_admin() && $query->is_main_query() && is_archive() && !is_shop() ) {
 		$query->set( 'posts_per_page', 9 );
-        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1; 
+        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
         if(isset( $_GET['size'] ) || isset( $_GET['color'] ) ||  isset( $_GET['cat'] ) || isset( $_GET['min_price'] ) && isset( $_GET['max_price'] ))
         {
             $query->set( 'offset', 1 );
         }
 
-       
+
 	}
 
     if ( !is_admin() && $query->is_main_query() && is_archive() && is_product_category() ) {
-        $query->set( 'posts_per_page', 12); 
+        $query->set( 'posts_per_page', 12);
     }
 
 
 	if ( !is_admin() && $query->is_main_query() && is_archive() && is_shop() ) {
         global $product;
 		$query->set( 'posts_per_page', 12);
-      
+
 		// Check if the 'size' and 'color' and category parameters are set in the URL
         if ( isset( $_GET['size'] ) || isset( $_GET['color'] ) ||  isset( $_GET['cat'] ) ) {
             $tax_query = array('relation' => 'AND');
@@ -30,7 +30,7 @@ function hyperlabs_set_posts_per_page_for_archive( $query ) {
             if ( isset( $_GET['size'] ) && ! empty( $_GET['size'] ) ) {
                 $size_values = array_map( 'sanitize_text_field', (array) $_GET['size'] );
                 $tax_query[] = array(
-                    'taxonomy' => 'pa_size',  
+                    'taxonomy' => 'pa_size',
                     'field'    => 'slug',
                     'terms'    => $size_values,
                 );
@@ -39,7 +39,7 @@ function hyperlabs_set_posts_per_page_for_archive( $query ) {
             if ( isset( $_GET['color'] ) && ! empty( $_GET['color'] )) {
                 $color_values = array_map( 'sanitize_text_field', (array) $_GET['color'] );
                 $tax_query[] = array(
-                    'taxonomy' => 'pa_color',  
+                    'taxonomy' => 'pa_color',
                     'field'    => 'slug',
                     'terms'    => $color_values,
                 );
@@ -48,7 +48,7 @@ function hyperlabs_set_posts_per_page_for_archive( $query ) {
 			if ( isset( $_GET['cat'] ) && ! empty( $_GET['cat'] )) {
                 $cat_values = array_map( 'sanitize_text_field', (array) $_GET['cat'] );
                 $tax_query[] = array(
-                    'taxonomy' => 'product_cat',  
+                    'taxonomy' => 'product_cat',
                     'field'    => 'slug',
                     'terms'    => $cat_values,
                 );
@@ -69,17 +69,17 @@ function hyperlabs_set_posts_per_page_for_archive( $query ) {
 		}
 
         // print_r($query);
-        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1; 
+        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
 
         if(isset( $_GET['size'] ) || isset( $_GET['color'] ) ||  isset( $_GET['cat'] ) || isset( $_GET['min_price'] ) && isset( $_GET['max_price'] ))
         {
 
-           
+
             $query->set( 'paged', 1 );
-          
-            
+
+
         }
-        
+
 	}
 }
 
@@ -89,14 +89,14 @@ add_action( 'pre_get_posts', 'hyperlabs_set_posts_per_page_for_archive' );
 add_filter( 'paginate_links', function($link){
 
     //Remove link page/1/ from the first element and prev element
-    
+
     if(is_archive() && !is_shop()){
         $link= str_replace('page/1/', '', $link);
     }
 
     return $link;
 } );
-add_filter( 'use_widgets_block_editor', '__return_false' );	
+add_filter( 'use_widgets_block_editor', '__return_false' );
 /*shop page **********************************/
 // remove_action( 'woocommerce_after_shop_loop', 'woocommerce_pagination', 10 );
 remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
@@ -116,7 +116,7 @@ function custom_woocommerce_catalog_ordering_wrap_end(){
 add_action( 'woocommerce_before_shop_loop', 'woocommerce_custom_filter', 20 );
 function woocommerce_custom_filter(){
     echo '<div class="shop_custom_filter col-md-auto col-12">';
-    echo '<div class="hl__filter-button d-flex align-items-center">  
+    echo '<div class="hl__filter-button d-flex align-items-center">
         <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="1" y="2" width="20" height="2" fill="black"/>
             <rect x="1" y="12" width="20" height="2" fill="black"/>
@@ -184,7 +184,7 @@ function woocommerce_custom_filter_and_deafult_filter_wrapper_start(){ ?>
                         <div class="hl__filter-block-header">КАТЕГОРІЯ:</div>
                         <div class="swiper swiper__filter-category swiper-initialized swiper-horizontal swiper-backface-hidden">
                             <div class="swiper-wrapper">
-                                
+
                                     <?php
                                         $terms_cat = get_terms( array(
                                             'taxonomy' => 'product_cat',  // Replace with your actual attribute taxonomy
@@ -193,7 +193,7 @@ function woocommerce_custom_filter_and_deafult_filter_wrapper_start(){ ?>
                                         foreach ($terms_cat as $cat) {
                                         $checked = (isset($_GET['cat']) && in_array($cat->slug, (array)$_GET['cat'])) ? 'checked' : '';
                                         echo ' <div class="swiper-slide"> <label class="hl__filter-category-item d-flex align-items-center">
-                                        <input class="hl__filter-category-item-checkbox" type="checkbox" name="cat[]" value="' . esc_attr($cat->slug) . '" ' . $checked . '> <div class="hl__filter-category-item-custom-checkbox"> </div><div class="hl__filter-category-item-text"> ' . esc_html($cat->name) . ' 
+                                        <input class="hl__filter-category-item-checkbox" type="checkbox" name="cat[]" value="' . esc_attr($cat->slug) . '" ' . $checked . '> <div class="hl__filter-category-item-custom-checkbox"> </div><div class="hl__filter-category-item-text"> ' . esc_html($cat->name) . '
                                         </div></label> </div>';
                                     }
                                     ?>
@@ -206,16 +206,16 @@ function woocommerce_custom_filter_and_deafult_filter_wrapper_start(){ ?>
 
                         <div class="hl__filter-block-content">
                             <div class="hl__range-slider row gx-0 align-items-center">
-                            
+
                                 <?php $price_limits = get_min_max_product_prices(); ?>
-                                <?php  
+                                <?php
                                 // $min_price = get_minimum_product_price();
                                 // $min =wc_price($min_price);
                                 // $max_price = get_maximum_product_price();
                                 // $max =wc_price($max_price);
                                 $minPrice = isset($_GET['min_price']) ? $_GET['min_price'] : $price_limits->min_price;
                                 $maxPrice = isset($_GET['max_price']) ? $_GET['max_price'] : $price_limits->max_price;?>
-                        
+
                                 <div class="col-auto d-flex">
                                     <input type="text" class="hl__range-slider-input" data-min-price="<?php echo $price_limits->min_price; ?>" id="filter_price" name="min_price" value="<?php echo $minPrice; ?>" readonly style="border:0; color:#fff;">
                                     <div class="currency-value-min text-white"></div>
@@ -227,7 +227,7 @@ function woocommerce_custom_filter_and_deafult_filter_wrapper_start(){ ?>
                                 <div class="col">
                                     <div class="ctc-slider-range noUi-target noUi-ltr noUi-horizontal noUi-txt-dir-ltr" id="slider-range"></div>
                                 </div>
-                                
+
                                 <div class="col-auto d-flex justify-content-end">
                                     <input type="text" class="hl__range-slider-input text-end" data-max-price="<?php echo $price_limits->max_price; ?>" id="filter_price_max" name="max_price" value="<?php echo $maxPrice; ?>" readonly style="border:0; color:#fff; ">
                                     <div class="currency-value-max text-white"></div>
@@ -238,7 +238,7 @@ function woocommerce_custom_filter_and_deafult_filter_wrapper_start(){ ?>
                         </div>
                     </div>
 
-                
+
                     <div class="hl__filter-block">
                         <div class="hl__filter-block-header">РОЗМІР:</div>
                         <div class="hl__filter-block-content">
@@ -251,20 +251,20 @@ function woocommerce_custom_filter_and_deafult_filter_wrapper_start(){ ?>
                                         ) );
                                         foreach ($terms as $term) {
                                         $checked = (isset($_GET['size']) && in_array($term->slug, (array)$_GET['size'])) ? 'checked' : '';
-                                        echo ' 
-                                        <div class="swiper-slide" > 
+                                        echo '
+                                        <div class="swiper-slide" >
                                             <label class="hl__filter-category-item d-flex align-items-center">
                                                 <input class="hl__filter-category-item-checkbox"  type="checkbox" name="size[]" value="' . esc_attr($term->slug) . '" ' . $checked . '>
                                                 <div class="hl__filter-category-item-custom-checkbox"></div>
-                                                <div class="hl__filter-category-item-text">' . esc_html($term->name) . ' </div> 
-                                            </label> 
+                                                <div class="hl__filter-category-item-text">' . esc_html($term->name) . ' </div>
+                                            </label>
                                         </div>';
                                         }
                                         echo ' <div class="swiper-slide" > <label class="hl__filter-category-item d-flex align-items-center"><input type="checkbox" class="hl__filter-category-item-checkbox"  name="size[]" value="" ' . $checked . '>  <div class="hl__filter-category-item-custom-checkbox"></div>
                                         <div class="hl__filter-category-item-text"> All </div></label> </div>';
                                         ?>
-                                        
-                                    
+
+
                                 </div>
                                 <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                             </div>
@@ -289,10 +289,10 @@ function woocommerce_custom_filter_and_deafult_filter_wrapper_start(){ ?>
                                 ?>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
-                
+
                 <?php  if(isset($_GET['orderby'])){ ?>
                 <input type="hidden" name="orderby" value="<?php echo $_GET['orderby']; ?>" />
                 <?php } ?>
@@ -305,11 +305,11 @@ function woocommerce_custom_filter_and_deafult_filter_wrapper_start(){ ?>
                 <?php } ?>
 
                 <button type="submit" class="hl__button hl__button--green hl__button--full"> Зберегти зміни</button>
-            
-        </form>
-    </div> 
 
-  <div class="filter_wrapper row align-items-center justify-content-between"> 
+        </form>
+    </div>
+
+  <div class="filter_wrapper row align-items-center justify-content-between">
  <?php
 }
 
@@ -342,8 +342,8 @@ add_filter( 'woocommerce_output_related_products_args', 'custom_related_products
 /*remove tabs from single product page */
 function custom_remove_product_tabs($tabs) {
     unset($tabs['description']);
-    unset($tabs['additional_information']); 
-    unset($tabs['reviews']); 
+    unset($tabs['additional_information']);
+    unset($tabs['reviews']);
     return $tabs;
 }
 add_filter('woocommerce_product_tabs', 'custom_remove_product_tabs', 98);
@@ -391,11 +391,11 @@ add_action( 'woocommerce_variable_add_to_cart', 'custom_update_price_with_variat
 function custom_update_price_with_variation_price() {
    global $product;
    $price = $product->get_price_html();
-   wc_enqueue_js( "     
-      $(document).on('found_variation', 'form.cart', function( event, variation ) {   
+   wc_enqueue_js( "
+      $(document).on('found_variation', 'form.cart', function( event, variation ) {
          if(variation.price_html) $('.summary > p.price').html(variation.price_html);
       });
-      $(document).on('hide_variation', 'form.cart', function( event, variation ) {   
+      $(document).on('hide_variation', 'form.cart', function( event, variation ) {
          $('.summary > p.price').html('" . $price . "');
       });
    " );
@@ -418,14 +418,14 @@ function custon_woocommerce_template_single_excerpt(){
         echo '<div class="description">'.$short_description.'</div> </div>';
     }
    echo '</div>';
-  
+
 }
 add_action('woocommerce_after_add_to_cart_form','mobile_woocommerce_template_single_excerpt',30);
 function mobile_woocommerce_template_single_excerpt(){
     global $product;
     $description = $product->get_description();
     $short_description = $product->get_short_description();
-   
+
     echo '<div class="mobile_discription d-none accordion" id="accordionDiscription"> ';
         if(!empty($description)){
             echo'<div class="accordion-item">
@@ -460,20 +460,20 @@ function custom_shipping_package_name( $name ) {
     return $with_html;
 }
 /*checkout page start */
-add_filter( 'woocommerce_order_button_text', 'wc_custom_order_button_text' ); 
+add_filter( 'woocommerce_order_button_text', 'wc_custom_order_button_text' );
 
 function wc_custom_order_button_text() {
-    return __( 'Перейти до оплати', 'woocommerce' ); 
+    return __( 'Перейти до оплати', 'woocommerce' );
 }
 
 add_filter( 'woocommerce_checkout_fields', 'custom_hook_checkout_fields' );
 function custom_hook_checkout_fields( $checkout_fields ) {
-   
 
-  unset($checkout_fields['billing']['billing_company']); 
-  unset($checkout_fields['billing']['billing_address_1']); 
-  unset($checkout_fields['billing']['billing_address_2']); 
-  unset($checkout_fields['billing']['billing_city']); 
+
+  unset($checkout_fields['billing']['billing_company']);
+  unset($checkout_fields['billing']['billing_address_1']);
+  unset($checkout_fields['billing']['billing_address_2']);
+  unset($checkout_fields['billing']['billing_city']);
   unset($checkout_fields['billing']['billing_state']);
   unset($checkout_fields['order']['order_comments']);
 
@@ -513,7 +513,7 @@ function save_address_details_show(){ ?>
 
 </div>
    <?php
-} 
+}
 
 add_action( 'woocommerce_before_checkout_form', 'custom_brudcrum_checkout_page', 9 );
 function custom_brudcrum_checkout_page(){ ?>

@@ -34,7 +34,7 @@ get_header();
 				</div>
 			</div>
 			<header class="page-header">
-				
+
 			</header><!-- .page-header -->
 
 			<div class="container">
@@ -52,11 +52,11 @@ get_header();
 				// get_template_part( 'template-parts/content', 'search' );
 				// wc_get_template_part( 'content', 'product_custom' );
 
-			endwhile; ?>			
+			endwhile; ?>
 			</ul>
-			</div> 
+			</div>
 			<?php
-			
+
 			the_posts_navigation();
 
 		else :
@@ -65,9 +65,9 @@ get_header();
 
 		endif;
 		?>
-	
+
 	</main><!-- #main -->
-	
+
 	<div id="hl" class="site">
 
 		<?php if ( have_posts() ) : ?>
@@ -154,5 +154,4 @@ get_header();
 	</div><!-- #hl -->
 
 <?php
-get_sidebar();
 get_footer();

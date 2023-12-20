@@ -12,13 +12,7 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<div class="hl__blog-post-header">
 		<div class="container">
-			<?php
-			if ( is_singular() ) :
-				the_title( '<h1>', '</h1>' );
-			else :
-				the_title( '<h1><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h1>' );
-			endif;
-			?>
+			<?php the_title( '<h1>', '</h1>' ); ?>
 			<div class="hl__blog-post-header-info d-flex align-items-center flex-wrap">
 				<div class="hl__blog-post-header-info-data"> <?php echo get_the_date(); ?></div>
 				<?php
