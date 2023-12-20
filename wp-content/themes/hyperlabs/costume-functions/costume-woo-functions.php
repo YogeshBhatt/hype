@@ -46,74 +46,74 @@ add_shortcode('popular_products', 'popular_product_function');
 remove_action('woocommerce_before_single_product_summary', 'woocommerce_show_product_images', 20);
 add_action('woocommerce_before_single_product_summary', 'custom_product_image_gallery', 20);
 function custom_product_image_gallery() {
-	global $product;
+    global $product;
 	$gallery_ids = $product->get_gallery_image_ids(); ?>
-	<div class="hl__product-screen-images">
-		<div class="col-auto">
-			<div class="swiper__main-small-cntrl d-flex align-items-center">
+			<div class="hl__product-screen-images">
+				<div class="col-auto">
+					<div class="swiper__main-small-cntrl d-flex align-items-center">
 
-				<div class="swiper__main-hot-news-nex">
-					<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<circle cx="20" cy="20" r="20" fill="#A5FD48"/>
-						<path d="M26 20L17.2434 12L16 13.136L19.0123 15.872L23.5306 20L19.0123 24.128L16.0175 26.864L17.2609 28L26 20Z" fill="black"/>
-					</svg>
-				</div>
+						<div class="swiper__main-hot-news-nex">
+							<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="20" cy="20" r="20" fill="#A5FD48"/>
+								<path d="M26 20L17.2434 12L16 13.136L19.0123 15.872L23.5306 20L19.0123 24.128L16.0175 26.864L17.2609 28L26 20Z" fill="black"/>
+							</svg>
+						</div>
 
-				<div class="swiper__main-hot-news-prev">
-					<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<circle cx="20" cy="20" r="20" fill="#A5FD48"/>
-						<path d="M26 20L17.2434 12L16 13.136L19.0123 15.872L23.5306 20L19.0123 24.128L16.0175 26.864L17.2609 28L26 20Z" fill="black"/>
-					</svg>
-				</div>
+						<div class="swiper__main-hot-news-prev">
+							<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="20" cy="20" r="20" fill="#A5FD48"/>
+								<path d="M26 20L17.2434 12L16 13.136L19.0123 15.872L23.5306 20L19.0123 24.128L16.0175 26.864L17.2609 28L26 20Z" fill="black"/>
+							</svg>
+						</div>
 
-			</div>
-		</div>
-
-		<div class="swiper swiper__product-big">
-			<div class="swiper-wrapper">
-				<div class="swiper-slide">
-					<div class="hl__swiper-product-big-item first_main_img">
-						<img src="<?php  echo wp_get_attachment_image_url($product->get_image_id(), 'full') ;?>" alt="<?php the_title_attribute(); ?>" />
 					</div>
 				</div>
-				<?php if ( $gallery_ids ): ?>
-					<?php foreach ($gallery_ids as $id): ?>
+
+				<div class="swiper swiper__product-big">
+					<div class="swiper-wrapper">
 						<div class="swiper-slide">
-							<div class="hl__swiper-product-big-item">
-								<img src="<?php echo wp_get_attachment_url($id,'full'); ?>" alt="<?php the_title_attribute(); ?>" class="hl__product-images-thumbnail-item-img" />
+							<div class="hl__swiper-product-big-item first_main_img">
+							<img src="<?php  echo wp_get_attachment_image_url($product->get_image_id(), 'full') ;?>" alt="<?php the_title_attribute(); ?>" />
 							</div>
 						</div>
-					<?php endforeach; ?>
-				<?php endif; ?>
-			</div>
-		</div>
-		<div class="swiper swiper__product-small">
-			<div class="swiper-wrapper">
-				<div class="swiper-slide">
-					<div class="hl__swiper-product-small-item">
-						<img src="<?php  echo wp_get_attachment_image_url($product->get_image_id()) ;?>" alt="<?php the_title_attribute(); ?>" />
+						<?php if ( $gallery_ids ): ?>
+							<?php foreach ($gallery_ids as $id): ?>
+							<div class="swiper-slide">
+								<div class="hl__swiper-product-big-item">
+								<img src="<?php echo wp_get_attachment_url($id,'full'); ?>" alt="<?php the_title_attribute(); ?>" class="hl__product-images-thumbnail-item-img" />
+								</div>
+							</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
 					</div>
 				</div>
-				<?php if ( $gallery_ids ): ?>
-					<?php foreach ($gallery_ids as $id): ?>
-						<div class="swiper-slide">
+				<div class="swiper swiper__product-small">
+					<div class="swiper-wrapper">
+					<div class="swiper-slide">
+							<div class="hl__swiper-product-small-item">
+							<img src="<?php  echo wp_get_attachment_image_url($product->get_image_id()) ;?>" alt="<?php the_title_attribute(); ?>" />
+							</div>
+						</div>
+						<?php if ( $gallery_ids ): ?>
+							<?php foreach ($gallery_ids as $id): ?>
+							<div class="swiper-slide">
 							<div class="hl__swiper-product-small-item">
 								<img src="<?php echo wp_get_attachment_url($id); ?>" alt="<?php the_title_attribute(); ?>" class="hl__product-images-thumbnail-item-img" />
 							</div>
-						</div>
-					<?php endforeach; ?>
-				<?php endif; ?>
-			</div>
+							</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</div>
 
-		</div>
-	</div>
+				</div>
+			</div>
 	<?php
 }
 
 // To change add to cart text on single product page
 add_filter( 'woocommerce_product_single_add_to_cart_text', 'woocommerce_custom_single_add_to_cart_text' );
 function woocommerce_custom_single_add_to_cart_text() {
-	return __( 'Додати до кошика', 'woocommerce' );
+    return __( 'Додати до кошика', 'woocommerce' );
 }
 
 //favorite button add
@@ -130,34 +130,34 @@ function custom_attribute_popup_html() {
 	$product = wc_get_product(get_the_id());
 	$product_type = $product->get_type();
 	if ($product_type === 'variable') {
-		$product_id = $product->get_id();
-		$color_attribute_value_simple = $product->get_attribute('color');
-		$color_attribute_value_dynamic = $product->get_attribute('pa_color');
+    $product_id = $product->get_id();
+	$color_attribute_value_simple = $product->get_attribute('color');
+	$color_attribute_value_dynamic = $product->get_attribute('pa_color');
 
-		$all_attribute = $product->get_attributes();
+	$all_attribute = $product->get_attributes();
 
-		// $size_attribute_value = $product->get_attribute('size');
-		// if (strpos($size_attribute_value, '|') !== false) {
-		// 	$size_attribute    =explode("|", $size_attribute_value);
-		// } else {
-		// 	$size_attribute    =explode(",", $size_attribute_value);
-		// }
+	// $size_attribute_value = $product->get_attribute('size');
+	// if (strpos($size_attribute_value, '|') !== false) {
+	// 	$size_attribute    =explode("|", $size_attribute_value);
+	// } else {
+	// 	$size_attribute    =explode(",", $size_attribute_value);
+	// }
 
-		$variations = $product->get_available_variations();
+	$variations = $product->get_available_variations();
 
-		$default_variation_attributes = $product->get_default_attributes();
-		?>
-		<div class="col-md-auto col-12 product_variation" id="attribute_popup">
-			<div class="hl__filter-button d-flex align-items-center" >
+	$default_variation_attributes = $product->get_default_attributes();
+	?>
+    <div class="col-md-auto col-12 product_variation" id="attribute_popup">
+        <div class="hl__filter-button d-flex align-items-center" >
 
 
-				<?php
-				$variationArray = [];
-				$variationSlugArray = [];
-				foreach($all_attribute as $key => $value)
-				{
-					// $attribute_data = $value->get_data();
-					// if($value['name'] != 'color' && $value['name'] != 'pa_color') {
+			<?php
+			$variationArray = [];
+			$variationSlugArray = [];
+			foreach($all_attribute as $key => $value)
+			{
+				// $attribute_data = $value->get_data();
+				// if($value['name'] != 'color' && $value['name'] != 'pa_color') {
 					$brand_terms = get_terms( $value['name'] );
 					if (str_contains($value['name'], 'pa_')) {
 						foreach($brand_terms as $k => $v)
@@ -174,9 +174,9 @@ function custom_attribute_popup_html() {
 							$variationSlugArray[$value['name']][$k] = $v['attributes']['attribute_'.$value['name']];
 						}
 					}
-					// }
-					?>
-					<?php //if($value['name'] != 'color' && $value['name'] != 'pa_color') {
+				// }
+				?>
+				<?php //if($value['name'] != 'color' && $value['name'] != 'pa_color') {
 					if(str_contains($value['name'], 'pa_'))
 					{
 						$name = str_replace("pa_","", $value['name']);
@@ -186,50 +186,50 @@ function custom_attribute_popup_html() {
 					}
 					?>
 					<?php if($value['name'] != 'color' && $value['name'] != 'pa_color'):?>
-					<p class="single_product_size selected_attribute_list right-arrow <?php echo $value['name'];?>" data-attribute-list="<?php echo $value['name'];?>"><?php echo $name;?>: <span><?php if(isset($default_variation_attributes[$value['name']])) echo $default_variation_attributes[$value['name']]; else echo '';?></span></p>
-				<?php else:?>
-					<p class="single_product_size single__product_color selected_attribute_list right-arrow <?php echo $value['name'];?>" data-attribute-list="<?php echo $value['name'];?>"><?php echo $name;?>:<span class="color" style="background-color: <?php if(isset($default_variation_attributes[$value['name']])) echo $default_variation_attributes[$value['name']]; else echo '';?>"></span></p>
-				<?php endif;?>
+						<p class="single_product_size selected_attribute_list right-arrow <?php echo $value['name'];?>" data-attribute-list="<?php echo $value['name'];?>"><?php echo $name;?>: <span><?php if(isset($default_variation_attributes[$value['name']])) echo $default_variation_attributes[$value['name']]; else echo '';?></span></p>
+					<?php else:?>
+						<p class="single_product_size single__product_color selected_attribute_list right-arrow <?php echo $value['name'];?>" data-attribute-list="<?php echo $value['name'];?>"><?php echo $name;?>:<span class="color" style="background-color: <?php if(isset($default_variation_attributes[$value['name']])) echo $default_variation_attributes[$value['name']]; else echo '';?>"></span></p>
+					<?php endif;?>
 				<?php }?>
-				<?php //} ?>
+			<?php //} ?>
 
-				<?php //if(!empty($color_attribute_value)){ ?>
-				<!-- <p class="single__product_color selected_attribute_list right-arrow" data-attribute-list="color">Колір:<span><?php //echo $default_variation_attributes['color'];?></span></p> -->
-				<?php //} ?>
+			<?php //if(!empty($color_attribute_value)){ ?>
+            <!-- <p class="single__product_color selected_attribute_list right-arrow" data-attribute-list="color">Колір:<span><?php //echo $default_variation_attributes['color'];?></span></p> -->
+			<?php //} ?>
 
-			</div>
-		</div>
+        </div>
+    </div>
 
-		<div class="hl__filter d-flex flex-column variation_popup" style="transform: translateX(100%); opacity: 0;" id="single_attribute">
-			<div class="hl__filter-top col-auto d-flex justify-content-end">
-				<div class="hl__filter-close">
-					<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M2.75 2.75001L27.25 27.25M2.75005 27.25L15 15L27.25 2.75" stroke="#939393" stroke-width="2.6" stroke-linecap="square"/>
-					</svg>
-				</div>
-			</div>
+    <div class="hl__filter d-flex flex-column variation_popup" id="single_attribute">
+        <div class="hl__filter-top col-auto d-flex justify-content-end">
+            <div class="hl__filter-close">
+                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.75 2.75001L27.25 27.25M2.75005 27.25L15 15L27.25 2.75" stroke="#939393" stroke-width="2.6" stroke-linecap="square"/>
+                </svg>
+            </div>
+        </div>
 
-			<form class="hl__filter-content col d-flex flex-column justify-content-between" >
-				<div class="hl__filter-wrap">
-					<div class="hl__filter-block">
-						<div class="row gx-0 align-items-center justify-content-between">
-							<div class="first_block">
+        <form class="hl__filter-content col d-flex flex-column justify-content-between" >
+            <div class="hl__filter-wrap">
+                <div class="hl__filter-block">
+                    <div class="row gx-0 align-items-center justify-content-between">
+						  <div class="first_block">
 								<div class="col-auto">
 									<?php foreach ($variationArray as $variationName => $variationValues):?>
 										<h2 class="title title_attr title_<?php echo $variationName;?>"><?php echo str_replace("pa_","", $variationName);?></h2>
 									<?php endforeach;?>
 								</div>
-							</div>
-							<div class="modal-body">
+                          </div>
+						  <div class="modal-body">
 								<div class="first_block">
-									<?php if(!empty($color_attribute_value_simple) || !empty($color_attribute_value_dynamic)){ ?>
+										<?php if(!empty($color_attribute_value_simple) || !empty($color_attribute_value_dynamic)){ ?>
 										<p id="popup_selected_color" class="sec_title d-flex align-item-center" style="color: white;">Вибрано колір: <span class="selected_color" style="background-color: <?php echo $default_variation_attributes['color'];?>;"></span></p>
-									<?php } ?>
+										<?php } ?>
 
-									<p class="selected_price d-none" id="popup_price" style="color: white;">
+										<p class="selected_price d-none" id="popup_price" style="color: white;">
 										<span class="price"></span>
-									</p>
-									<?php foreach ($variationArray as $variationName => $variationValues):?>
+										</p>
+										<?php foreach ($variationArray as $variationName => $variationValues):?>
 										<ul style="color: white;" id="<?php echo $variationName;?>_select" class="<?php echo $variationName;?> attribute_select <?php echo ($variationName == "color" || $variationName == "pa_color") ? "color_select" : "size_select";?>">
 											<?php if($variationName == "color" || $variationName == "pa_color"):?>
 												<?php
@@ -267,7 +267,7 @@ function custom_attribute_popup_html() {
 												<?php endforeach;?>
 											<?php endif;?>
 										</ul>
-									<?php endforeach;?>
+										<?php endforeach;?>
 
 
 								</div>
@@ -277,11 +277,11 @@ function custom_attribute_popup_html() {
 					</div>
 				</div>
 				<button class= "hl__button hl__button--green mt-4" id="single_attribute_save">Зберегти зміни</button>
-			</form>
+        </form>
 
-		</div>
+    </div>
 
-	<?php }
+   <?php }
 }
 add_action('woocommerce_before_add_to_cart_form', 'custom_attribute_popup_html', 21);
 
@@ -296,24 +296,26 @@ function wc_no_products_found_custom_html(){
 		<h2 class="my-4">No products were found matching your selection custom</h2>
 
 		<a href="<?php echo $shop_page_url ?>" class="hl__button hl__button--black mx-auto">Перейти в колекцію</a>
-	</div>
-	<?php
+    </div>
+<?php
 }
 
 
 function custom_mini_cart() {
-	echo '<a href="#" class="dropdown-back" data-toggle="dropdown"> ';
-	echo '<i class="fa fa-shopping-cart" aria-hidden="true"></i>';
-	echo '<div class="basket-item-count" style="display: inline;">';
-	echo '<div class="cart-items-count count">';
-	echo WC()->cart->get_cart_contents_count();
-	echo '</div>';
-	echo '</div>';
-	echo '</a>';
-	echo '<ul class="dropdown-menu dropdown-menu-mini-cart">';
-	echo '<li> <div class="widget_shopping_cart_content">';
-	woocommerce_mini_cart();
-	echo '</div></li></ul>';
+	// 	echo '<a href="#" class="dropdown-back" data-toggle="dropdown"> ';
+	//     echo '<i class="fa fa-shopping-cart" aria-hidden="true"></i>';
+	//     echo '</a>';
+		echo '<div class="hl__minicard"> <div class="hl__minicard-top col-auto d-flex justify-content-end"> <div class="hl__minicard-close">
+			<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M2.75 2.75001L27.25 27.25M2.75005 27.25L15 15L27.25 2.75" stroke="#939393" stroke-width="2.6" stroke-linecap="square"></path></svg>
+			</div></div>';
 
+	//     echo '<div class="hl_minicard_dropdown">';
+		echo '<div class="widget_shopping_cart_content "> ';
+		// woocommerce-mini-cart-item mini_cart_item
+
+		woocommerce_mini_cart();
+	//     echo '</div>';
+		echo '</div> </div>';
 }
 add_shortcode( 'quadlayers-mini-cart', 'custom_mini_cart' );
