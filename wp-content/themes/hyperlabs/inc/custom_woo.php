@@ -1,33 +1,7 @@
 <?php
-
-function mytheme_add_woocommerce_support() {
-    add_theme_support( 'woocommerce' );
-}
-add_action( 'after_setup_theme', 'mytheme_add_woocommerce_support' );
 /**
  * Post per page for archive
  */
-
- function hook_css() {
-    if ( !is_admin() && is_product_category() ) {
-       ?>
-        <div class="hl__collection-image">
-            <div class="hl__collection-image-back">
-                <img src="http://122.170.110.131:9106/wp-content/uploads/2023/11/swiper-small-img2.png" alt="collection image">
-            </div>
-            <div class="container">
-                <div class="row align-items-center justify-content-center">
-                <div class="col-auto">
-                    <div class="hl__collection-image-title"><?php wp_title(); ?></div>
-                </div>
-                </div>
-          </div>
-        </div>
-        <?php
-    }
-}
-add_action('wp_head', 'hook_css');
-
 function hyperlabs_set_posts_per_page_for_archive( $query ) {
 	if ( !is_admin() && $query->is_main_query() && is_archive() && !is_shop() ) {
 		$query->set( 'posts_per_page', 9 );
@@ -480,7 +454,11 @@ function custom_breadcrum_for_mobile(){
     woocommerce_breadcrumb();
     echo '</div>';
 }
-
+add_filter( 'woocommerce_shipping_package_name', 'custom_shipping_package_name' );
+function custom_shipping_package_name( $name ) {
+    $with_html = "<div class='shipping_title'>Delivery  </div>";
+    return $with_html;
+}
 /*checkout page start */
 add_filter( 'woocommerce_order_button_text', 'wc_custom_order_button_text' ); 
 
@@ -493,47 +471,28 @@ function custom_hook_checkout_fields( $checkout_fields ) {
    
 
   unset($checkout_fields['billing']['billing_company']); 
+  unset($checkout_fields['billing']['billing_address_1']); 
   unset($checkout_fields['billing']['billing_address_2']); 
   unset($checkout_fields['billing']['billing_city']); 
   unset($checkout_fields['billing']['billing_state']);
   unset($checkout_fields['order']['order_comments']);
-  //unset($checkout_fields['billing']['billing_postcode']);
 
-  $checkout_fields['billing']['billing_address_1']['label'] = 'Street / House number / Apartment number';
-
-  
+  $checkout_fields['billing']['billing_postcode']['label'] = 'index';
 
   $checkout_fields[ 'billing' ][ 'billing_country' ][ 'priority' ] = 6;
-  $checkout_fields[ 'billing' ][ 'billing_address_1' ][ 'priority' ] = 30;
   $checkout_fields[ 'billing' ][ 'billing_phone' ][ 'priority' ] = 40;
 
   //required
-
   $checkout_fields['billing']['billing_email']['required'] = false;
-  $checkout_fields['billing']['billing_country']['required'] = false;
+  $checkout_fields['billing']['billing_postcode']['required'] = false;
   $checkout_fields['billing']['billing_phone']['required'] = true;
   $checkout_fields['billing']['billing_first_name']['required'] = true;
   $checkout_fields['billing']['billing_last_name']['required'] = true;
-  $checkout_fields['billing']['billing_address_1']['required'] = false;
 
-
-  $checkout_fields['billing']['billing_backyard'] = array(
-    'label'       => __('Backyard', 'woocommerce'),
-    'placeholder' => _x('Select', 'placeholder', 'woocommerce'),
-    'required'    => true,
-    'clear'       => false,
-    'priority'    =>41,
-    'type'        => 'select',
-    'options'     => array(
-        ''          => __('Select', 'woocommerce'),
-        'eat-meat' => __('Warsaw', 'woocommerce' ),
-        'not-meat' => __('Warsaw 2', 'woocommerce' )
-        )
-    );
   return $checkout_fields;
 }
 
-/* Limit Woocommerce phone field to 10 digits number 
+/* Limit Woocommerce phone field to 10 digits number
 add_action('woocommerce_checkout_process', 'custom_checkout_field_process');
 function custom_checkout_field_process() {
     global $woocommerce;
@@ -541,24 +500,32 @@ function custom_checkout_field_process() {
     if (!(preg_match($pattern, $_POST['billing_phone'] ))){
         wc_add_notice( "Incorrect Phone Number! Please enter valid phone number"  ,'error' );
     }
-} */
+}  */
 
 add_action('woocommerce_review_order_before_payment','save_address_details_show');
 function save_address_details_show(){ ?>
-  <h2><b>Адреса доставки</b></h2>
-   <p id="save_name"></p>
-   <p id="save_address"></p>
-   <p id="save_number"></p>
-   <p id="save_email"></p>
+<div class="hl_delivery_address">
+    <h2 class="title">Адреса доставки</h2>
+    <p id="save_name"></p>
+    <p id="save_address"></p>
+    <p id="save_number"></p>
+    <p id="save_email"></p>
+
+</div>
    <?php
 } 
 
 add_action( 'woocommerce_before_checkout_form', 'custom_brudcrum_checkout_page', 9 );
 function custom_brudcrum_checkout_page(){ ?>
-      <h3>
+      <div class="hl__breadcrumbs breadcrumbs_checkout">
         <a href="#"><span id="delivery_info" style="color:black">Iнформація про доставку</span ></a>
-        <span id="delivery_payment_info" style="color:gray" > > Оплата</span>
-      </h3>
+        <span class="icon">
+            <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 8L1.24343 0L0 1.136L3.01226 3.872L7.53065 8L3.01226 12.128L0.0175129 14.864L1.26095 16L10 8Z" fill="black"/>
+            </svg>
+        </span>
+        <span id="delivery_payment_info"> Оплата</span>
+      </div>
  <?php }
 
 /*add new bonus code field */
@@ -571,24 +538,7 @@ function custom_checkout_fields_before_billing_details(){
         'label'         => __('Enter the bonus code', $domain ),
         'class'         => array('form-row'),
         'priority'      =>5,
-    ), $checkout->get_value( '_custom_bonus_code_field_name' ) );
-
-    woocommerce_form_field( 'bill_index_field_name', array(
-        'type'          => 'text',
-        'label'         => __('index', $domain ),
-        'class'         => array('form-row'),
-        'priority'      =>109,
-    ), $checkout->get_value( 'bill_index_field_name' ) );
-
-    woocommerce_form_field( 'custom_checkout_radio', array(
-        'type' => 'radio',
-        'class' => array( 'form-row' ),
-        'label'         => __('', $domain ),
-        'options' => array('option_one' => 'Ukrposhta','option_two' => 'New post',),
-        'priority'      =>7,
-        'default'  => 'option_one',
-        ), $checkout->get_value('custom_checkout_radio'));
-    
+    ), $checkout->get_value( 'bill_custom_bonus_code_field_name' ) );
 }
 // Save custom checkout fields the data to the order
 add_action( 'woocommerce_checkout_create_order', 'custom_checkout_field_update_meta', 10, 2 );
@@ -596,16 +546,17 @@ function custom_checkout_field_update_meta( $order, $data ){
     if( isset($_POST['bill_custom_bonus_code_field_name']) && ! empty($_POST['bill_custom_bonus_code_field_name']) ){
         $order->update_meta_data( 'bill_custom_bonus_code_field_name', sanitize_text_field( $_POST['bill_custom_bonus_code_field_name'] ) );
     }
-    if( isset($_POST['custom_checkout_radio']) && ! empty($_POST['custom_checkout_radio']) ){
-        $order->update_meta_data( 'custom_checkout_radio', sanitize_text_field( $_POST['custom_checkout_radio'] ) );
-    }
-    if( isset($_POST['bill_index_field_name']) && ! empty($_POST['bill_index_field_name']) ){
-        $order->update_meta_data( 'bill_index_field_name', sanitize_text_field( $_POST['bill_index_field_name'] ) );
-    }
-    if( isset($_POST['billing_backyard']) && ! empty($_POST['billing_backyard']) ){
-        $order->update_meta_data( 'billing_backyard', sanitize_text_field( $_POST['billing_backyard'] ) );
+}
+/* this billing field show on admin side */
+add_action( 'woocommerce_admin_order_data_after_billing_address', 'my_custom_checkout_field_display_admin_order_meta', 10, 1 );
+function my_custom_checkout_field_display_admin_order_meta( $order ){
+    $bill_custom_bonus_code_field_name = $order->get_meta('bill_custom_bonus_code_field_name'); // Get custom field value
+
+    if( ! empty( $billing_cif ) ) {
+        echo '<p><strong>'.__('Bonus code').':</strong><br>' . $bill_custom_bonus_code_field_name . '</p>';
     }
 }
+
 
 
 

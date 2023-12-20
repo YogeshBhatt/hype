@@ -39,12 +39,12 @@ defined( 'ABSPATH' ) || exit;
 				    <div class="product-img">
 						<?php echo apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key ); ?>
 			        </div>	
-				    <div class="product-name">
-					     <?php echo $product_name      = apply_filters( 'woocommerce_cart_item_name', $_product->get_title(), $cart_item, $cart_item_key ); ?>
+				    <div class="product-info">
+					     <?php echo '<div class="product_name">'.$product_name = apply_filters( 'woocommerce_cart_item_name', $_product->get_title(), $cart_item, $cart_item_key ).'</div>'; ?>
 						<?php //echo $product_name = wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) ) . '&nbsp;'; ?>
 						<?php foreach ($cart_item['variation'] as $attribute_name => $attribute_value) {
-							   $replce_att_name = str_replace("attribute_pa_","",$attribute_name);
-								echo '<p class="mcheckout-attribute">' . wc_attribute_label($replce_att_name) . ': ' . $attribute_value . '</p>';
+							   	$replce_att_name = str_replace("attribute_pa_","",$attribute_name);
+								echo '<p class="mcheckout-attribute products_att">' . wc_attribute_label($replce_att_name) . ': <span>' . $attribute_value . '</span></p>';
 						 } ?>
 						<?php // echo apply_filters( 'woocommerce_checkout_cart_item_quantity', ' <strong class="product-quantity">' . sprintf( '&times;&nbsp;%s', $cart_item['quantity'] ) . '</strong>', $cart_item, $cart_item_key ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<?php echo wc_get_formatted_cart_item_data( $cart_item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -79,7 +79,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="cart-subtotal">
 			<div><?php esc_html_e( 'Subtotal', 'woocommerce' ); ?></div>
 			<div><?php wc_cart_totals_subtotal_html(); ?></div>
-	</div>
+	   </div>
 
 		<?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
 			<div class="cart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
@@ -88,6 +88,7 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 		<?php endforeach; ?>
 
+		<div class="shipping_checkout_wrapper">
 		<?php if ( WC()->cart->needs_shipping() && WC()->cart->show_shipping() ) : ?>
 
 			<?php do_action( 'woocommerce_review_order_before_shipping' ); ?>
@@ -95,8 +96,8 @@ defined( 'ABSPATH' ) || exit;
 			<?php wc_cart_totals_shipping_html(); ?>
 
 			<?php do_action( 'woocommerce_review_order_after_shipping' ); ?>
-
 		<?php endif; ?>
+		</div>
 
 		<?php foreach ( WC()->cart->get_fees() as $fee ) : ?>
 			<div class="fee">
@@ -124,7 +125,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php do_action( 'woocommerce_review_order_before_order_total' ); ?>
 
 		<div class="order-total">
-			<div><?php esc_html_e( 'Total', 'woocommerce' ); ?></div>
+			<strong><?php esc_html_e( 'Total', 'woocommerce' ); ?></strong>
 			<div><?php wc_cart_totals_order_total_html(); ?></div>
 			</div>
 

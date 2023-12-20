@@ -151,14 +151,14 @@ function hyperlabs_scripts() {
 
 	wp_enqueue_style( 'jquery_ui_css', get_template_directory_uri() . '/css/jquery-ui.min.css', array(), time() );
 	wp_enqueue_style( 'daterangepicker_css', get_template_directory_uri(). '/css/daterangepicker.min.css', array(), time() );
-	// wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css', array(), time() );
+	wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css', array(), time() );
 	wp_enqueue_script( 'jquery_ui_js', get_template_directory_uri(). '/js/jquery-ui.min.js', array(), time() );
 	wp_enqueue_script( 'daterangepicker_min_js', get_template_directory_uri() . '/js/daterangepicker.min.js', array(), time() );
-	// wp_enqueue_script( 'select2-js', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js', array(), time() );
+	wp_enqueue_script( 'select2-js', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js', array(), time() );
 
 	//custom js
 	wp_enqueue_script( 'hyperlabs-custom', get_template_directory_uri() . '/js/custom.js', array(), time(), true );
-	wp_enqueue_script( 'hyperlabs-custom-teq', get_template_directory_uri() . '/js/teq_custom.js', array(), time(), true );
+	wp_enqueue_script( 'hyperlabs-custom-teq', get_template_directory_uri() . '/js/teq_custom_new.js', array(), time(), true );
 
 //	wp_enqueue_script( 'hyperlabs-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
 	wp_enqueue_script( 'hyperlabs-swiper', get_template_directory_uri() . '/js/swiper-bundle.min.js', array(), _S_VERSION, true );
@@ -189,6 +189,7 @@ function hyperlabs_scripts() {
 		'siteUrl' => get_site_url(),
 		'ajaxUrl' => admin_url('admin-ajax.php'),
 	));
+	
 }
 
 add_action( 'wp_enqueue_scripts', 'hyperlabs_scripts' );
@@ -633,9 +634,7 @@ function custom_mini_cart() {
 		</div></div>';
 
 //     echo '<div class="hl_minicard_dropdown">';
-    echo '<div class="widget_shopping_cart_content hl_minicard_wrap col d-flex flex-column justify-content-between"> 
-    <div class="hl__filter-block"> <h2  class="hl_title">Кошик для покупок</h2> </div>
-    ';
+    echo '<div class="widget_shopping_cart_content "> ';
 	// woocommerce-mini-cart-item mini_cart_item
     
 	woocommerce_mini_cart();
@@ -756,6 +755,7 @@ function update_cart_quantity() {
 	}
 
 	// Output the updated mini cart
+	// custom_mini_cart();
 	woocommerce_mini_cart();
 
 	wp_die();
@@ -778,15 +778,15 @@ function custom_content_after_breadcrumb() {
 
 	}
        ?>
-        <div class="hl__collection-image">
+        <div class="hl__collection-image hl__collection_banner">
             <div class="hl__collection-image-back">
 			<?php echo wp_get_attachment_image($category_thumbnail, 'full'); ?>
             </div>
             <div class="container">
                 <div class="row align-items-center justify-content-center">
-                <div class="col-auto">
-                    <div class="hl__collection-image-title"><?php echo $current_category->name; ?></div>
-                </div>
+				<div class="col-auto">
+					<div class="hl__collection-image-title">"<?php echo $current_category->name; ?>"</div>
+				</div>
                 </div>
           </div>
         </div>
@@ -794,3 +794,32 @@ function custom_content_after_breadcrumb() {
     }
 }
 add_action('woocommerce_before_main_content', 'custom_content_after_breadcrumb',21);
+
+/*removed title from shipping plugin array  */
+function change_globle_var($arr) {
+    $arr['fields_title'] = wcus_i18n('');
+	$arr['shipping_type_warehouse'] = wcus_i18n('Ukrposhta');
+	$arr['shipping_type_doors'] = wcus_i18n('New post');
+
+    return $arr;
+}
+ add_filter( 'wcus_checkout_i18n', 'change_globle_var', 10, 1 );
+
+/*in checkout page  */
+function wpdocs_js_code_example() {
+  if(is_checkout()){
+	?>
+	<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$("form").keypress(function(e) {
+			//Enter key
+					if (e.which == 13) {
+						return false;
+					}
+			});
+      });
+	</script>
+	<?php
+ }
+}
+add_action( 'wp_footer', 'wpdocs_js_code_example' );

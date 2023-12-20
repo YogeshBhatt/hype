@@ -77,8 +77,11 @@
 	<div class="entry-summary">
 		<?php the_excerpt(); ?>
 	</div><!-- .entry-summary -->
-
+    <?php
+	/*
 	<footer class="entry-footer">
 		<?php hyperlabs_entry_footer(); ?>
 	</footer><!-- .entry-footer -->
+	*/
+	?>
 </article><!-- #post-<?php the_ID(); ?> -->

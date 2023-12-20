@@ -11,10 +11,14 @@
 
 ?>
 
-</div>
+</div><!-- #hl -->
 <?php get_template_part('template-parts/site-footer'); ?>
-<?php get_template_part('template-parts/login-popup'); ?>
-<?php get_template_part('template-parts/registration-popup'); ?>
+<?php get_template_part('template-parts/popups/login-popup'); ?>
+<?php get_template_part('template-parts/popups/mail-recovery-popup'); ?>
+<?php get_template_part('template-parts/popups/success-registration-popup'); ?>
+<?php get_template_part('template-parts/popups/success-password-recovery-popup'); ?>
+<?php get_template_part('template-parts/popups/error-popup'); ?>
+<?php get_template_part('template-parts/popups/registration-popup'); ?>
 
 <?php if ( is_front_page() ): ?>
 	<script type="module">

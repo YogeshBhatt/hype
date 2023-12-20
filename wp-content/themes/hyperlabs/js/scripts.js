@@ -103,6 +103,22 @@ const swiperProductBig = new Swiper('.swiper__product-big', {
     swiper: swiperProductSmall,
   },
 })
+const swiperFilterSizeProduct = new Swiper('.swiper__filter-size-product', {
+  slidesPerView: 'auto',
+  spaceBetween: 12,
+})
+const swiperFilterColorProduct = new Swiper('.swiper__filter-color-product', {
+  slidesPerView: 2,
+  spaceBetween: 12,
+})
+const swiperAccountAdaptiveMenu = new Swiper('.swiper__account-adaptive-menu', {
+  slidesPerView: 'auto',
+  spaceBetween: 16,
+})
+const swiperAccountHistorySort = new Swiper('.swiper__account-history-sort', {
+  slidesPerView: 'auto',
+  spaceBetween: 10,
+})
 
 // CHANGE IMAGE ON PRODUCT
 function setupProductCard(card) {
@@ -175,6 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
     auth: false,
     registration: false,
     burger: false,
+    size: false,
+    color: false,
+    forgetPassword: false,
   }
 
   const fog = document.createElement('div')
@@ -256,9 +275,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const authButtonBurger = document.querySelector('.hl__open-auth-burger')
   const authCloseButton = document.querySelector('#authClose')
   const authGoButton = document.querySelector('#goToAuth')
+  const goToAuthFromForgetPassword = document.querySelector(
+    '#goToAuthFromForgetPassword'
+  )
 
   addToggleEventListener(
-    [authButton, authCloseButton, authGoButton, authButtonBurger],
+    [
+      authButton,
+      authCloseButton,
+      authGoButton,
+      authButtonBurger,
+      goToAuthFromForgetPassword,
+    ],
     authContainer,
     'auth'
   )
@@ -285,68 +313,186 @@ document.addEventListener('DOMContentLoaded', () => {
     'burger'
   )
 
+  // SIZE
+  const sizeContainer = document.querySelector('#size')
+  const sizeCloseButton = document.querySelector('#sizeClose')
+  const sizeGoButton = document.querySelector('#goToSize')
+  const sizeButtonSave = document.querySelector('#saveSizeButton')
+
+  addToggleEventListener(
+    [sizeCloseButton, sizeGoButton, sizeButtonSave],
+    sizeContainer,
+    'size'
+  )
+
+  // COLOR
+  const colorContainer = document.querySelector('#color')
+  const colorCloseButton = document.querySelector('#colorClose')
+  const colorGoButton = document.querySelector('#goToColor')
+  const colorButtonSave = document.querySelector('#saveColorButton')
+
+  addToggleEventListener(
+    [colorCloseButton, colorGoButton, colorButtonSave],
+    colorContainer,
+    'color'
+  )
+
+  // FORGET PASSWORD
+  const forgetPasswordContainer = document.querySelector('#forgetPassword')
+  const forgetPasswordCloseButton = document.querySelector(
+    '#forgetPasswordClose'
+  )
+  const forgetPasswordGoButton = document.querySelector('#goToForgetPassword')
+
+  addToggleEventListener(
+    [forgetPasswordCloseButton, forgetPasswordGoButton],
+    forgetPasswordContainer,
+    'color'
+  )
+
   const allPopups = [
     searchContainer,
     filterContainer,
     authContainer,
     regContainer,
     burgerContainer,
+    sizeContainer,
+    colorContainer,
+    forgetPasswordContainer,
   ]
 
-  // VALIDATION
-  function validateFields(fields) {
-    let allFieldsValid = true
+  setTimeout(() => {
+    // VALIDATION
+    function validateFields(fields) {
+      let allFieldsValid = true
 
-    fields.forEach((field) => {
+      fields.forEach((field) => {
+        const input = document.getElementById(field.inputId)
+        const container = input.closest('.hl__auth-item-container')
+
+        if (input.value.trim() === '') {
+          container.classList.add('error')
+          allFieldsValid = false
+        } else {
+          container.classList.remove('error')
+        }
+
+        if (field.inputId === 'inputRegConfirmPassword') {
+          if (
+              input.value.trim() ===
+              document.getElementById('inputRegPassword').value.trim()
+          ) {
+            container.classList.remove('error-match')
+          } else {
+            container.classList.add('error-match')
+            allFieldsValid = false
+          }
+        }
+
+        if (field.inputId === 'formAccountChangePasswordNewSecond') {
+          if (
+              input.value.trim() ===
+              document.getElementById('formAccountChangePasswordNew').value.trim()
+          ) {
+            container.classList.remove('error-match')
+          } else {
+            container.classList.add('error-match')
+            allFieldsValid = false
+          }
+        }
+      })
+
+      return allFieldsValid
+    }
+
+    function updateSubmitButtonState(fields, button) {
+      button.disabled = !validateFields(fields)
+    }
+
+    // AUTH VALIDATION
+    const authFields = [
+      { inputId: 'inputAuthEmail' },
+      { inputId: 'inputAuthPassword' },
+    ]
+
+    const authSubmitButton = document.getElementById('authSubmitButton')
+
+    authFields.forEach((field) => {
       const input = document.getElementById(field.inputId)
-      const container = input.closest('.hl__auth-item-container')
 
-      if (input.value.trim() === '') {
-        container.classList.add('error')
-        allFieldsValid = false
-      } else {
-        container.classList.remove('error')
+      input.addEventListener('input', function () {
+        updateSubmitButtonState(authFields, authSubmitButton)
+      })
+    })
+
+    // REGISTRATION VALIDATION
+    const regFields = [
+      { inputId: 'inputRegEmail' },
+      { inputId: 'inputRegPassword' },
+      { inputId: 'inputRegPasswordConfirm' },
+    ]
+
+    const regSubmitButton = document.getElementById('regSubmitButton')
+
+    regFields.forEach((field) => {
+      const input = document.getElementById(field.inputId)
+
+      if (typeof (input) !== 'undefined' && input != null) {
+        // console.log(input)
+        input.addEventListener('input', function () {
+          updateSubmitButtonState(regFields, regSubmitButton)
+        })
+      }
+
+    })
+
+    // FORGET PASSWORD VALIDATION
+    const forgetPasswordFields = [{ inputId: 'inputForgetPasswordEmail' }]
+
+    const forgetPasswordSubmitButton = document.getElementById(
+        'forgetPasswordSubmitButton'
+    )
+
+    forgetPasswordFields.forEach((field) => {
+      const input = document.getElementById(field.inputId)
+
+      if (typeof (input) !== 'undefined' && input != null) {
+        // console.log(input)
+        input.addEventListener('input', function () {
+          updateSubmitButtonState(forgetPasswordFields, forgetPasswordSubmitButton)
+        })
       }
     })
 
-    return allFieldsValid
-  }
+    // CHANGE PASSWORD VALIDATION
+    const formAccountChangePasswordFields = [
+      {
+        inputId: 'formAccountChangePasswordOld',
+      },
+      {
+        inputId: 'formAccountChangePasswordNew',
+      },
+      {
+        inputId: 'formAccountChangePasswordNewSecond',
+      },
+    ]
 
-  function updateSubmitButtonState(fields, button) {
-    button.disabled = !validateFields(fields)
-  }
+    const formAccountChangePasswordSubmitButton = document.getElementById(
+        'formAccountChangePasswordButton'
+    )
 
-  // AUTH VALIDATION
-  const authFields = [
-    { inputId: 'inputAuthEmail' },
-    { inputId: 'inputAuthPassword' },
-  ]
+    formAccountChangePasswordFields.forEach((field) => {
+      const input = document.getElementById(field.inputId)
 
-  const authSubmitButton = document.getElementById('authSubmitButton')
-
-  authFields.forEach((field) => {
-    const input = document.getElementById(field.inputId)
-
-    // input.addEventListener('input', function () {
-    //   updateSubmitButtonState(authFields, authSubmitButton)
-    // })
-  })
-
-  // REGISTRATION VALIDATION
-  const regFields = [
-    { inputId: 'inputRegEmail' },
-    { inputId: 'inputRegPassword' },
-  ]
-
-  const regSubmitButton = document.getElementById('regSubmitButton')
-
-  regFields.forEach((field) => {
-    const input = document.getElementById(field.inputId)
-
-    // input.addEventListener('input', function () {
-    //   updateSubmitButtonState(regFields, regSubmitButton)
-    // })
-  })
+      input &&
+      input.addEventListener('input', function () {
+        updateSubmitButtonState(
+            formAccountChangePasswordFields,
+            formAccountChangePasswordSubmitButton
+        )
+      })
+    })
+  }, 100);
 
   // FAQ
   var faqItems = document.querySelectorAll('.hl__collections-faq-item')
@@ -365,131 +511,124 @@ document.addEventListener('DOMContentLoaded', () => {
         item.classList.toggle('open')
       })
     })
-})
 
-function clearFilterForm() {
-  const form = document.getElementById('filterForm')
-  form.reset()
-  rangeSlider.noUiSlider.reset()
-}
-const clearFormButton = document.getElementById('clearFormButton')
-clearFormButton && clearFormButton.addEventListener('click', clearFilterForm)
+  // SIZE & COLOR
+  const sizeAndColor = {
+    size: null,
+    color: null,
+  }
+  const sizeRadioButtons = document.querySelectorAll(
+    'input[name="sizeProduct"]'
+  )
+  const colorRadioButtons = document.querySelectorAll(
+    'input[name="colorProduct"]'
+  )
+  const sizeInputs = document.querySelectorAll('.inputForSizeView')
+  const colorInputs = document.querySelectorAll('.inputForColorView')
+
+  function conditionalFunction(property, value) {
+    if (property === 'size') {
+      sizeInputs.forEach((item) => {
+        item.value = value
+      })
+    } else if (property === 'color') {
+      colorInputs.forEach((item) => {
+        item.value = value
+        item.style.backgroundColor = value
+      })
+    }
+  }
+
+  const sizeAndColorProxy = new Proxy(sizeAndColor, {
+    set: function (target, property, value) {
+      conditionalFunction(property, value)
+      target[property] = value
+      return true
+    },
+  })
+
+  sizeRadioButtons.forEach((radio) => {
+    radio.addEventListener('change', function () {
+      sizeAndColorProxy.size = this.value
+    })
+  })
+  colorRadioButtons.forEach((radio) => {
+    radio.addEventListener('change', function () {
+      sizeAndColorProxy.color = this.value
+    })
+  })
+
+  if (sizeRadioButtons.length) {
+    sizeRadioButtons[0].checked = true
+    sizeAndColorProxy.size = sizeRadioButtons[0].value
+  }
+  if (colorRadioButtons.length) {
+    colorRadioButtons[0].checked = true
+    sizeAndColorProxy.color = colorRadioButtons[0].value
+  }
+
+  function clearFilterForm() {
+    const form = document.getElementById('filterForm')
+    form.reset()
+    rangeSlider.noUiSlider.reset()
+  }
+  const clearFormButton = document.getElementById('clearFormButton')
+  clearFormButton && clearFormButton.addEventListener('click', clearFilterForm)
 
 // SELECT
-const genderSelect = document.getElementById('selectRegGender')
-const countrySelect = document.getElementById('selectRegCountry')
+  const genderSelect = document.getElementById('selectRegGender')
+  const countrySelect = document.getElementById('selectRegCountry')
+  const countryAccountSelect = document.getElementById('selectAccountCountry')
+  const cityAccountSelect = document.getElementById('selectAccountCity')
 
-genderSelect &&
+  genderSelect &&
   NiceSelect.bind(genderSelect, {
     searchable: false,
   })
-countrySelect &&
+  countrySelect &&
   NiceSelect.bind(countrySelect, {
     searchable: false,
   })
-
-  // DOM LOADED
-document.addEventListener('DOMContentLoaded', () => {
-  // FILTER
-  const fog = document.createElement('div')
-  fog.className = 'hl__fog'
-  document.body.appendChild(fog)
-
-  const filterButton = document.querySelector('.hl__filter-button')
-  const filter = document.querySelector('.hl__filter')
-  const fogElement = document.querySelector('.hl__fog')
-  const closeButton = document.querySelector('.hl__filter-close')
-
-  const filterElementsToToggle = [filterButton, closeButton, fogElement]
-
-  function toggleFilter() {
-    const isOpen = filter.style.transform === 'translateX(0%)'
-    const transformValue = isOpen ? 'translateX(100%)' : 'translateX(0%)'
-    const opacityValue = isOpen ? 0 : 1
-
-    filter.style.transform = transformValue
-    filter.style.opacity = opacityValue
-    fogElement.style.opacity = opacityValue
-    fogElement.style.pointerEvents = isOpen ? 'none' : 'auto'
-    document.body.style.overflow = isOpen ? 'auto' : 'hidden'
-  }
-
-
-  filterElementsToToggle.forEach((element) => {
-    element && element.addEventListener('click', toggleFilter)
+  countryAccountSelect &&
+  NiceSelect.bind(countryAccountSelect, {
+    searchable: false,
+  })
+  cityAccountSelect &&
+  NiceSelect.bind(cityAccountSelect, {
+    searchable: false,
   })
 
-  // SEARCH
-  // const searchFog = document.createElement('div')
-  // searchFog.className = 'hl__search-fog'
-  // document.body.appendChild(searchFog)
-
-  // const searchContainer = document.querySelector('.hl__search')
-  // const searchFogElement = document.querySelector('.hl__search-fog')
-  // const toggleSearchButtons = Array.from(
-  //   document.querySelectorAll(
-  //     '.hl__open-search, .hl__search-form-close, .hl__search-fog'
-  //   )
-  // )
-
-  // function toggleSearch() {
-  //   const isBurgerOpen = burgerMenu.style.transform === 'translateX(0%)'
-  //   isBurgerOpen && toggleBurgerMenu()
-  //   document.body.style.overflow =
-  //     document.body.style.overflow === 'hidden' ? 'auto' : 'hidden'
-  //   const opacityValue = document.body.style.overflow === 'hidden' ? 1 : 0
-  //   searchFogElement.style.opacity = opacityValue
-  //   searchFogElement.style.pointerEvents =
-  //     document.body.style.overflow === 'hidden' ? 'auto' : 'none'
-  //   searchContainer.classList.toggle('open')
-  // }
-
-  // toggleSearchButtons.forEach((element) => {
-  //   element && element.addEventListener('click', toggleSearch)
-  // })
-
-  // BURGER
-  const burgerMenu = document.querySelector('.hl__burger-menu')
-  const burgeButton = document.querySelector('.hl__header-burger-ico')
-  const closeBurgerButton = document.querySelector('.hl__burger-menu-close')
-
-  const burgerElementsToToggle = [burgeButton, closeBurgerButton]
-
-  function toggleBurgerMenu() {
-    const isOpen = burgerMenu.style.transform === 'translateX(0%)'
-    const transformValue = isOpen ? 'translateX(100%)' : 'translateX(0%)'
-    const opacityValue = isOpen ? 0 : 1
-
-    burgerMenu.style.transform = transformValue
-    burgerMenu.style.opacity = opacityValue
-    document.body.style.overflow = isOpen ? 'auto' : 'hidden'
-  }
-
-  burgerElementsToToggle.forEach((element) => {
-    element && element.addEventListener('click', toggleBurgerMenu)
-  })
-
-  // FAQ
-  var faqItems = document.querySelectorAll('.hl__collections-faq-item')
-
-  faqItems &&
-    faqItems.forEach(function (item) {
-      var header = item.querySelector('.hl__collections-faq-item-header')
-
-      header.addEventListener('click', function () {
-        faqItems.forEach(function (faqItem) {
-          if (faqItem !== item) {
-            faqItem.classList.remove('open')
-          }
-        })
-
-        item.classList.toggle('open')
-      })
-    })
 })
 
-function clearFilterForm() {
-  const form = document.getElementById('filterForm')
-  form.reset()
-  rangeSlider.noUiSlider.reset()
-}
+
+// success or error popups
+window.onload = function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const popupDelay = 3000;
+
+  if (urlParams.get('registered') === 'true') {
+
+    document.body.classList.add('hl__view-success-registration');
+
+    setTimeout(function() {
+      document.body.classList.remove('hl__view-success-registration');
+      window.location.href = '/my-account';
+    }, popupDelay);
+  } else if (urlParams.get('password-recovery') === 'success') {
+    history.replaceState(null, null, window.location.pathname)
+
+    document.body.classList.add('hl__view--success-password-recovery');
+
+    setTimeout(function() {
+      document.body.classList.remove('hl__view--success-password-recovery');
+    }, popupDelay);
+  } else if (urlParams.get('send-form') === 'error') {
+    history.replaceState(null, null, window.location.pathname)
+
+    document.body.classList.add('hl__view--error-popup');
+
+    setTimeout(function() {
+      document.body.classList.remove('hl__view--error-popup');
+    }, popupDelay);
+  }
+};

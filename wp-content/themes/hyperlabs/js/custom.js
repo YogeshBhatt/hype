@@ -1,34 +1,14 @@
 jQuery(document).ready(function($) {
-
-    $('.remove-from-cart').on('click', function(e) {
-        alert('dsghds');
-        e.preventDefault();
-
-        var cartKey = $(this).data('cart-key');
-
-        $.ajax({
-            type: 'POST',
-            url: myScriptData.ajax_url,
-            data: {
-                action: 'remove_cart_item',
-                cart_key: cartKey,
-            },
-            success: function(response) {
-                // Update mini cart HTML
-                // location.reload();
-                // $('.dropdown-menu-mini-cart').html(response);
-            }
-        });
-    });
-
-    // Quantity Increase Button Click Event
+// Quantity Increase Button Click Event
 $(document).on('click', '.quantity-increase', function(e) {
+//   $('.quantity-increase').off('click').on('click', function(e) {
     e.preventDefault();
     var cartKey = $(this).data('cart-key');
     updateCartQuantity(cartKey, 'increase');
 });
 
 // Quantity Decrease Button Click Event (Assuming you have a similar block of code)
+// $('.quantity-decrease').off('click').on('click', function(e) {
 $(document).on('click', '.quantity-decrease', function(e) {
     e.preventDefault();
     var cartKey = $(this).data('cart-key');
@@ -50,163 +30,22 @@ function updateCartQuantity(cartKey, action) {
         data: data,
         success: function(response) {
             // Update the mini cart with the refreshed content
-            $('.dropdown-menu-mini-cart').html(response);
+            $('.widget_shopping_cart_content').html(response);
         }
     });
 }
-// $(document).on('click', '.remove-from-cart', function(e) {
-// // $(".remove-from-cart").click(function(e) {
-//     console.log("ghdshdsdj");
-//      e.preventDefault();
-//      var cartKey = $(this).data("cart-key");
-//      $.ajax({
-//          type: "POST",
-//          url: custom_mini_cart_params.ajax_url,
-//          data: {
-//              action: "remove_from_cart",
-//              cart_key: cartKey,
-//              nonce: custom_mini_cart_params.nonce,
-//          },
-//          success: function(response) {
-//             location.reload();
-//              // Update the mini cart content
-//              // You may need to refresh the entire page or update specific elements based on your theme
-//              console.log(response);
-//          },
-//      });
-//  });
-// $(document).off('click').on('click', '.remove-cart-item', function(e) {
-//     e.preventDefault();
 
-//     var cartItemKey = $(this).data('cart-key');
-//     console.log(cartItemKey);
-//     // AJAX request
-//     $.ajax({
-//         type: 'POST',
-//         url: customAjax.ajaxurl,
-//         data: {
-//             action: 'custom_remove_cart_item',
-//             cart_item_key: cartItemKey,
-//         },
-//         success: function (response) {
-//             // Optional: Handle success response
-//             // $('.dropdown-menu-mini-cart').html(response);
-//             location.reload();
-//             console.log('Item removed successfully',response );
-//         },
-//         error: function (error) {
-//             // Optional: Handle error response
-//             console.log('Error removing item');
-//         }
-//     });
-// });
+$(document).on('click', '.remove_from_cart_button', function(e) {
+    function isCartEmpty() {
+        return true; // Change this to your actual condition
+    }
 
-// $(document).off('click').on('click', '.remove-item', function(e) {
-//     e.preventDefault();
-//     var cartKey = $(this).data('cart-key');
-//     alert('dsjd');
-//     // Use AJAX to remove the item from the cart
-//     $.ajax({
-//         type: 'POST',
-//         dataType: 'json',
-//         url: myScriptData.ajax_url,
-//         data: {
-//             action: 'remove_cart_item',
-//             cart_key: cartKey,
-//         },
-//         success: function(response) {
-           
-//             // Update the mini cart content
-//             // You may need to customize this based on your theme's structure
-//             // For example, you can reload the entire page or update the mini cart via AJAX
-//             location.reload();
-//         },
-//     });
-// });
+    // Check if the cart is empty on page load
+    if (isCartEmpty()) {
 
-    // $(document).on('click', '.quantity-decrease', function(e) {
-    //     e.preventDefault();
-    //     var cartKey = $(this).data('cart-key');
-    //     var data = {
-    //         action: 'increase_cart_quantity',
-    //         cart_key: cartKey,
-    //         nonce: custom_mini_cart_params.nonce,
-    //     };
-
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: custom_mini_cart_params.ajax_url,
-    //         data: data,
-    //         success: function(response) {
-    //             // Update the mini cart with the refreshed content
-    //             $('.dropdown-menu-mini-cart').html(response);
-    //         }
-    //     });
-    // });
-    
-    // $('.remove-cart-item').off('click').on('click', function(e) {
-    //  e.preventDefault();
-
-    // var cartItemKey = $(this).data('cart-key');
-    // console.log(cartItemKey);
-    // // AJAX request
-    // $.ajax({
-    //     type: 'POST',
-    //     url: customAjax.ajaxurl,
-    //     data: {
-    //         action: 'custom_remove_cart_item',
-    //         cart_item_key: cartItemKey,
-    //     },
-    //     success: function (response) {
-    //         // Optional: Handle success response
-    //         // $('.dropdown-menu-mini-cart').html(response);
-    //         location.reload();
-    //         console.log('Item removed successfully',response );
-    //     },
-    //     error: function (error) {
-    //         // Optional: Handle error response
-    //         console.log('Error removing item');
-    //     }
-    // });
-    // });
-
-    // // Decrease quantity
-    // $('.quantity-decrease').off('click').on('click', function(e) {
-    //     e.preventDefault();
-    //     var cartKey = $(this).data('cart-key');
-    //     var quantityElement = $(this).siblings('.quantity');
-    //     var currentQuantity = parseInt(quantityElement.text());
-
-    //     if (currentQuantity > 1) {
-    //         // Update quantity in the DOM
-    //         quantityElement.text(currentQuantity - 1);
-
-    //         // Update quantity via AJAX
-    //         updateCartQuantity(cartKey, currentQuantity - 1);
-    //     }
-    // });
-
-
-    // // AJAX function to update cart quantity
-    // function updateCartQuantity(cartKey, newQuantity) {
-    //     $.ajax({
-    //         url: myScriptData.ajax_url,
-    //         type: 'POST',
-    //         data: {
-    //             action: 'update_cart_values', // Replace with your actual WordPress action hook
-    //             cart_key: cartKey,
-    //             new_quantity: newQuantity,
-    //         },
-    //         success: function(response) {
-
-    //             console.log(response);
-    //             // Handle the AJAX response
-    //             console.log('WordPress hook triggered successfully.');
-    //         },
-    //     });
-       
-    // }
-
+        location.reload();
+    }
+});
     $('.langauge').on('click', function(event) {
         var currency = $( ".gt-current-lang" ).attr( "data-gt-lang" );
         if(currency ===  'uk')
@@ -426,4 +265,48 @@ function updateCartQuantity(cartKey, action) {
 
 
 });
+
+
+jQuery(document).ready(function($) {
+    $('.hl__minicard_icon').click(function(){
+        $('.hl__minicard, .minicard_overflow, body').addClass('open_minicard');
+    })
+    $('.hl__minicard-close, .minicard_overflow').click(function(){
+        $('.hl__minicard, .minicard_overflow, body').removeClass('open_minicard');
+    })
+
+    $('.woocommerce-checkout #order_review_heading').click(function(){
+        $(this).parent().toggleClass('hl__show_review');
+        // $('.woocommerce-checkout .shop_table.woocommerce-checkout-review-order-table').slideToggle();
+    })
+})
+
+
+jQuery('.form-row :input').each(function() {
+    var $input = jQuery(this);
+    var $row   = $input.closest('.form-row');
+
+    // Is the field filled on page load?
+    if ($input.val()) {
+      $row.addClass('-filled');
+    }
+
+    // Enter or leave the "focus" state.
+    $input.on('focus', function() {
+      $row.addClass('-focus');
+    });
+    $input.on('blur', function() {
+      $row.removeClass('-focus');
+    });
+
+    // When the fields input value changes, add or remove the "-filled" state
+    $input.on('input', function() {
+      if ($input.val()) {
+        $row.addClass('-filled');
+      } else {
+        $row.removeClass('-filled');
+      }
+    });
+  })
+
 

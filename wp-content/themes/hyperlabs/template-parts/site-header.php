@@ -41,8 +41,11 @@ if ( function_exists('get_field') ) {
 			<div class="col">
 				<div class="hl__header-right row align-items-center justify-content-end">
 					<div class="hl__header-icons col-auto row gx-3 align-items-center">
-						<div class="hl__header-icons-item col-auto order-lg-0 order-1">
+						<div class="col-auto order-lg-0 order-1">
 							<div class="hl__minicard_icon">
+							<?php if ( ! WC()->cart->is_empty() ) : ?>
+								<div class="hl__minicard_added"></div>
+							<?php  endif; ?>
 								<svg fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18" viewBox="0 0 37.164 37.164" xml:space="preserve">
 									<g>
 										<path d="M37.164,12.23c0-1.386-1.124-2.509-2.509-2.509h-6.327l-4.046-8.396C23.832,0.39,22.707,0,21.77,0.446
@@ -54,6 +57,7 @@ if ( function_exists('get_field') ) {
 								</svg>
 							</div>
 							
+							<div class="minicard_overflow"></div>
 							<?php echo do_shortcode('[quadlayers-mini-cart]'); ?>
 
 						</div>
