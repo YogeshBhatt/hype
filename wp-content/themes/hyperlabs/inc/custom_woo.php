@@ -483,7 +483,7 @@ function custom_hook_checkout_fields( $checkout_fields ) {
   $checkout_fields[ 'billing' ][ 'billing_phone' ][ 'priority' ] = 40;
 
   //required
-  $checkout_fields['billing']['billing_email']['required'] = false;
+  $checkout_fields['billing']['billing_email']['required'] = true;
   $checkout_fields['billing']['billing_postcode']['required'] = false;
   $checkout_fields['billing']['billing_phone']['required'] = true;
   $checkout_fields['billing']['billing_first_name']['required'] = true;
@@ -556,6 +556,96 @@ function my_custom_checkout_field_display_admin_order_meta( $order ){
         echo '<p><strong>'.__('Bonus code').':</strong><br>' . $bill_custom_bonus_code_field_name . '</p>';
     }
 }
+
+/*in checkout page  */
+function wpdocs_js_code_example() {
+    if(is_checkout()){
+      ?>
+      <script type="text/javascript">
+          jQuery(document).ready(function($) {
+              $("form").keypress(function(e) {
+              //Enter key
+                      if (e.which == 13) {
+                          return false;
+                      }
+              });
+        });
+      </script>
+      <?php
+   }
+  }
+  add_action( 'wp_footer', 'wpdocs_js_code_example' );
+
+  /*removed title from shipping plugin array  */
+function change_globle_var($arr) {
+    $arr['fields_title'] = wcus_i18n('');
+	$arr['shipping_type_warehouse'] = wcus_i18n('Ukrposhta');
+	$arr['shipping_type_doors'] = wcus_i18n('New post');
+
+    return $arr;
+}
+ add_filter( 'wcus_checkout_i18n', 'change_globle_var', 10, 1 );
+
+
+ function custom_content_after_breadcrumb() {
+    if ( is_product_category() ) {
+
+		$current_category = get_queried_object();
+		//print_r($current_category);
+// Check if it's a category page
+	if (is_a($current_category, 'WP_Term') && taxonomy_exists('product_cat')) {
+		// Get the term ID of the current category
+		$term_id = $current_category->term_id;
+
+		// Output the term ID
+		$category_thumbnail = get_term_meta($term_id, 'thumbnail_id', true);
+
+	}
+       ?>
+        <div class="hl__collection-image hl__collection_banner">
+            <div class="hl__collection-image-back">
+			<?php echo wp_get_attachment_image($category_thumbnail, 'full'); ?>
+            </div>
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+				<div class="col-auto">
+					<div class="hl__collection-image-title">"<?php echo $current_category->name; ?>"</div>
+				</div>
+                </div>
+          </div>
+        </div>
+        <?php
+    }
+}
+add_action('woocommerce_before_main_content', 'custom_content_after_breadcrumb',21);
+
+/**
+ * Custom woo functions
+ */
+require_once get_template_directory() . '/costume-functions/costume-woo-functions.php';
+function update_cart_quantity() {
+	check_ajax_referer('custom_mini_cart_nonce', 'nonce');
+
+	$cart_key = sanitize_text_field($_POST['cart_key']);
+	$update_action = sanitize_text_field($_POST['update_action']);
+	$cart_item = WC()->cart->get_cart_item($cart_key);
+
+	if ($cart_item) {
+		if ($update_action === 'increase') {
+			WC()->cart->set_quantity($cart_key, $cart_item['quantity'] + 1);
+		} elseif ($update_action === 'decrease') {
+			WC()->cart->set_quantity($cart_key, max(1, $cart_item['quantity'] - 1));
+		}
+	}
+
+	// Output the updated mini cart
+	// custom_mini_cart();
+	woocommerce_mini_cart();
+
+	wp_die();
+}
+add_action('wp_ajax_update_cart_quantity', 'update_cart_quantity');
+add_action('wp_ajax_nopriv_update_cart_quantity', 'update_cart_quantity');
 
 
 
