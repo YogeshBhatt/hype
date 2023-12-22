@@ -32,8 +32,8 @@ $collectionsCounter = 0;
 				<h2><?php echo $collectionsSectionTitle; ?></h2>
 			</div>
 		<?php endif; ?>
+		<?php if ($collectionsQuery->have_posts()) : ?>
 		<div class="swiper swiper__main-big">
-			<?php if ($collectionsQuery->have_posts()) : ?>
 				<div class="swiper-wrapper">
 					<?php while ($collectionsQuery->have_posts() && $collectionsCounter < $collectionsProductLimit) : $collectionsQuery->the_post(); ?>
 						<?php global $product; ?>
@@ -64,8 +64,8 @@ $collectionsCounter = 0;
 					<?php endwhile; ?>
 					<?php wp_reset_postdata(); ?>
 				</div>
-			<?php endif; ?>
 		</div>
+		<?php endif; ?>
 		<div class="swiper-scrollbar__main-big"></div>
 	</div>
 </div>

@@ -35,8 +35,8 @@ $counter = 0;
 				<h2><?php echo $sectionTitle; ?></h2>
 			</div>
 		<?php endif; ?>
+		<?php if ($query->have_posts()) : ?>
 		<div class="swiper swiper__main-big">
-			<?php if ($query->have_posts()) : ?>
 			<div class="swiper-wrapper">
 				<?php while ($query->have_posts() && $counter < $limit) : $query->the_post(); ?>
 					<?php global $product; ?>
@@ -67,8 +67,8 @@ $counter = 0;
 				<?php endwhile; ?>
 				<?php wp_reset_postdata(); ?>
 			</div>
-			<?php endif; ?>
 		</div>
+		<?php endif; ?>
 		<div class="swiper-scrollbar__main-big"></div>
 	</div>
 </div>
