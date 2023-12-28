@@ -1,14 +1,53 @@
 jQuery(document).ready(function($) {
+    $('.remove-from-wishlist').on('click', function(e) {
+        e.preventDefault();
+        var productId = $(this).data('product-id');
+        $.ajax({
+            type: 'POST',
+            url: myScriptData.ajaxUrl,
+            data: {
+                action: 'remove_from_wishlist',
+                product_id: productId
+            },
+            success: function(response) {
+              location.reload();
+            },
+            error: function() {
+                alert('Error removing product from wishlist.');
+            }
+        });
+    });
+
+
+    $(document).on('click', '.add-to-wishlist', function(e) {
+        e.preventDefault();
+        var productId = $(this).data('product-id');
+        $.ajax({    
+            type: "POST",
+            url: myScriptData.ajaxUrl,
+            data: {
+                action: 'add_to_wishlist',
+                product_id: productId
+            },
+            success: function(response) {
+                alert('Product added to wishlist!');
+                // Update UI based on response
+            },
+            error: function() {
+                alert('Error adding product to wishlist.');
+
+            }
+        });
+    });
+    
 // Quantity Increase Button Click Event
 $(document).on('click', '.quantity-increase', function(e) {
-//   $('.quantity-increase').off('click').on('click', function(e) {
     e.preventDefault();
     var cartKey = $(this).data('cart-key');
     updateCartQuantity(cartKey, 'increase');
 });
 
 // Quantity Decrease Button Click Event (Assuming you have a similar block of code)
-// $('.quantity-decrease').off('click').on('click', function(e) {
 $(document).on('click', '.quantity-decrease', function(e) {
     e.preventDefault();
     var cartKey = $(this).data('cart-key');
@@ -21,12 +60,12 @@ function updateCartQuantity(cartKey, action) {
         action: 'update_cart_quantity',
         cart_key: cartKey,
         update_action: action,
-        nonce: custom_mini_cart_params.nonce,
+        nonce: myScriptData.nonce,
     };
 
     $.ajax({
         type: 'POST',
-        url: custom_mini_cart_params.ajax_url,
+        url: myScriptData.ajaxUrl,
         data: data,
         success: function(response) {
             // Update the mini cart with the refreshed content
@@ -35,17 +74,7 @@ function updateCartQuantity(cartKey, action) {
     });
 }
 
-$(document).on('click', '.remove_from_cart_button', function(e) {
-    function isCartEmpty() {
-        return true; // Change this to your actual condition
-    }
 
-    // Check if the cart is empty on page load
-    if (isCartEmpty()) {
-
-        location.reload();
-    }
-});
     $('.langauge').on('click', function(event) {
         var currency = $( ".gt-current-lang" ).attr( "data-gt-lang" );
         if(currency ===  'uk')
@@ -122,6 +151,11 @@ $(document).on('click', '.remove_from_cart_button', function(e) {
 
 
 
+    let a_color = $('.pa_color').attr('data-attr-color');
+    if(a_color == "")
+    {
+        $('.color').css('display','none');
+    }
 
     /*single product page jquery */
     let default_values = [];
@@ -209,6 +243,10 @@ $(document).on('click', '.remove_from_cart_button', function(e) {
         $("#popup_selected_color").addClass("d-none");
     });
 
+    $(document).on('click',".color_li",function(e) {
+        $('.pa_color span').css('display','block');
+    });
+
     $(document).on('click',".attribute_select li a",function(e) {
         e.preventDefault();
         var name = $(this).parent('li').attr('data-selected-attr').trim();
@@ -236,7 +274,7 @@ $(document).on('click', '.remove_from_cart_button', function(e) {
                 let current_selected_val_main = $(this).children("li.selected").attr("data-selected-attr");//.find('p.attr_val_p_main').text().trim();
                 default_values[$(this).children("li.selected").attr("data-attr")] = current_selected_val;
                 if($(this).children("li.selected").attr("data-attr") == "color" || $(this).children("li.selected").attr("data-attr") == 'pa_color') {
-                    console.log(current_selected_val_main);
+              
                     $('#attribute_popup p[data-attribute-list="'+$(this).children("li.selected").attr("data-attr")+'"] span').css('background-color',current_selected_val_main);
                 } else {
                     $('#attribute_popup p[data-attribute-list="'+$(this).children("li.selected").attr("data-attr")+'"] span').text(current_selected_val_main);

@@ -35,19 +35,25 @@ defined( 'ABSPATH' ) || exit;
 
 			if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
 				?>
+
 				<div class="<?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?>">
-				    <div class="product-img">
-						<?php echo apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key ); ?>
-			        </div>	
-				    <div class="product-info">
-					     <?php echo '<div class="product_name">'.$product_name = apply_filters( 'woocommerce_cart_item_name', $_product->get_title(), $cart_item, $cart_item_key ).'</div>'; ?>
-						<?php //echo $product_name = wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) ) . '&nbsp;'; ?>
-						<?php foreach ($cart_item['variation'] as $attribute_name => $attribute_value) {
-							   	$replce_att_name = str_replace("attribute_pa_","",$attribute_name);
-								echo '<p class="mcheckout-attribute products_att">' . wc_attribute_label($replce_att_name) . ': <span>' . $attribute_value . '</span></p>';
-						 } ?>
-						<?php // echo apply_filters( 'woocommerce_checkout_cart_item_quantity', ' <strong class="product-quantity">' . sprintf( '&times;&nbsp;%s', $cart_item['quantity'] ) . '</strong>', $cart_item, $cart_item_key ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-						<?php echo wc_get_formatted_cart_item_data( $cart_item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<div class="d-flex">
+						<div class="product-img">
+						<?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_id ), 'single-post-thumbnail' ); ?>
+						<img src="<?php echo $image[0] ?>">
+							<?php //echo apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key ); ?>
+					   </div>	
+					    <div class="product-info">
+							<?php echo '<div class="product_name">'.$product_name = apply_filters( 'woocommerce_cart_item_name', $_product->get_title(), $cart_item, $cart_item_key ).'</div>'; ?>
+							<?php //echo $product_name = wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) ) . '&nbsp;'; ?>
+							<?php foreach ($cart_item['variation'] as $attribute_name => $attribute_value) {
+									   $replce_att_name = str_replace("attribute_pa_","",$attribute_name);
+									echo '<p class="mcheckout-attribute products_att">' . wc_attribute_label($replce_att_name) . ': <span>' . $attribute_value . '</span></p>';
+							 } ?>
+							<?php // echo apply_filters( 'woocommerce_checkout_cart_item_quantity', ' <strong class="product-quantity">' . sprintf( '&times;&nbsp;%s', $cart_item['quantity'] ) . '</strong>', $cart_item, $cart_item_key ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php echo wc_get_formatted_cart_item_data( $cart_item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						</div>
+
 					</div>
 					<div class="product-total">
 					<?php

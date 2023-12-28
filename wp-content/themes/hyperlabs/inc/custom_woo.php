@@ -2,8 +2,17 @@
 /**
  * Post per page for archive
  */
+
+ add_filter('woocommerce_get_breadcrumb', 'customize_woocommerce_breadcrumbs', 10, 2);
+function customize_woocommerce_breadcrumbs($crumbs, $breadcrumb) {
+    if (count($crumbs) > 1 && 'Shop' === $crumbs[1][0]) {
+        $crumbs[0][0] = 'HYPELABS'; // Change 'Home' to 'HyperLab'
+    }
+    return $crumbs;
+}
+    
 function hyperlabs_set_posts_per_page_for_archive( $query ) {
-	if ( !is_admin() && $query->is_main_query() && is_archive() && !is_shop() ) {
+	if ( !is_admin() && $query->is_main_query() && is_archive() && !is_shop() && !is_product_category()) {
 		$query->set( 'posts_per_page', 9 );
         $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
         if(isset( $_GET['size'] ) || isset( $_GET['color'] ) ||  isset( $_GET['cat'] ) || isset( $_GET['min_price'] ) && isset( $_GET['max_price'] ))
@@ -19,7 +28,7 @@ function hyperlabs_set_posts_per_page_for_archive( $query ) {
     }
 
 
-	if ( !is_admin() && $query->is_main_query() && is_archive() && is_shop() ) {
+	if ( (!is_admin() && $query->is_main_query() && is_archive() && is_shop()) || (!is_admin() && $query->is_main_query() && is_archive() && is_product_category()) ) {
         global $product;
 		$query->set( 'posts_per_page', 12);
 
@@ -260,7 +269,7 @@ function woocommerce_custom_filter_and_deafult_filter_wrapper_start(){ ?>
                                             </label>
                                         </div>';
                                         }
-                                        echo ' <div class="swiper-slide" > <label class="hl__filter-category-item d-flex align-items-center"><input type="checkbox" class="hl__filter-category-item-checkbox"  name="size[]" value="" ' . $checked . '>  <div class="hl__filter-category-item-custom-checkbox"></div>
+                                        echo ' <div class="swiper-slide" > <label class="hl__filter-category-item d-flex align-items-center"><input type="checkbox" class="hl__filter-category-item-checkbox" value="All" ' . $checked . '>  <div class="hl__filter-category-item-custom-checkbox"></div>
                                         <div class="hl__filter-category-item-text"> All </div></label> </div>';
                                         ?>
 
@@ -647,6 +656,170 @@ function update_cart_quantity() {
 add_action('wp_ajax_update_cart_quantity', 'update_cart_quantity');
 add_action('wp_ajax_nopriv_update_cart_quantity', 'update_cart_quantity');
 
+/*my-account-page start ************************************************************/
+
+//Add a new endpoint to the My Account page
+function custom_panel_endpoint() {
+    add_rewrite_endpoint('selected-products', EP_ROOT | EP_PAGES);
+    //add_rewrite_endpoint('custom-order', EP_ROOT | EP_PAGES);
+}
+add_action('init', 'custom_panel_endpoint');
+
+// Add a new link to the My Account menu
+function custom_panel_link($menu_links) {
+    $newitems = array(
+        'edit-address'       => __( 'Personal office', 'woocommerce' ),
+        'orders'             => __( 'Order history', 'woocommerce' ),
+        'selected-products'  => __( 'Selected products', 'woocommerce' ),
+        'edit-account'       => __( 'Password', 'woocommerce' ),
+     ); 
+     return $newitems;
+   
+}
+add_filter('woocommerce_account_menu_items', 'custom_panel_link',9999);
+
+
+/*edit-address redirection */
+function redirect_to_billing( $wp ) {
+    $current_url = home_url(add_query_arg(array(),$wp->request));
+    $billing = home_url('/my-account/edit-address/billing');
+    /** If user is accessing edit-address endpoint and it's not the billing address**/
+    if(is_wc_endpoint_url('edit-address') && $current_url !== $billing){ 
+        wp_redirect($billing);
+        exit();
+    }
+}
+add_action( 'parse_request', 'redirect_to_billing' , 10);
+
+// billing field for my-account page only
+add_filter(  'woocommerce_billing_fields', 'custom_billing_fields', 20, 1 );
+function custom_billing_fields( $fields ) {
+    // Only on account pages
+    if( ! is_account_page() ) return $fields;
+
+    unset($fields['billing_company']);
+    ## ---- 2.  Sort billing email and phone fields ---- ##
+    $fields['billing_phone']['priority'] = 25;
+    $fields['billing_phone']['class'] = array('form-row-last');
+    $fields['billing_email']['priority'] = 29;
+    $fields['billing_email']['class'] = array('form-row-first');
+   
+    return $fields;
+}
+add_filter(  'woocommerce_default_address_fields', 'custom_default_address_fields', 20, 1 );
+function custom_default_address_fields( $fields ) {
+    // Only on account pages
+    if( ! is_account_page() ) return $fields;
+    unset($fields['address_2']);
+    // Set the order (sorting fields) in the array below
+    $sorted_fields = array('first_name','last_name','country','postcode','state','city','address_1');
+    $new_fields = array();
+    $priority = 0;
+    // Reordering billing and shipping fields
+    foreach($sorted_fields as $key_field){
+        $priority += 10;
+        $new_fields[$key_field] = $fields[$key_field];
+        $new_fields[$key_field]['priority'] = $priority;
+    }
+    return $new_fields;
+}
+
+//=============================28-12-2023==============================================
+
+//Display list of filters
+add_action('woocommerce_before_account_orders', 'custom_order_filter_fun');
+function custom_order_filter_fun($has_orders){
+if ( $has_orders ) : 
+	$order_statuses = array(
+        // 'wc-pending'    => _x( 'Pending payment', 'Order status', 'woocommerce' ),
+        //'wc-processing' => _x( 'Processing', 'Order status', 'woocommerce' ), //In the way
+        //'wc-on-hold'    => _x( 'On hold', 'Order status', 'woocommerce' ),
+        'wc-completed'  => _x( 'Delivered', 'Order status', 'woocommerce' ), //Delivered
+        'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'woocommerce' ), //Cancelled
+        //'wc-refunded'   => _x( 'Refunded', 'Order status', 'woocommerce' ),
+        //'wc-failed'     => _x( 'Failed', 'Order status', 'woocommerce' ),
+		'wc-processing'  => _x( 'Paid', 'Order status', 'woocommerce' ), 
+		'wc-processing_dublicate'  => _x( 'In the way', 'Order status', 'woocommerce' ), 
+    ); ?>
+	<div class="hl__account-history-sort d-grid align-items-center">
+            <div class="hl__account-history-sort-text">Sort by:</div>
+                <div class="hl__account-history-sort-content">
+                    <div class="swiper swiper__account-history-sort" id="filter_order_history">
+                            <div class="swiper-wrapper">
+                            <div class="swiper-slide filter_status_name">
+
+                                <a href="#" class="hl__account-history-sort-item <?php echo (!$_GET['order_status'] || $_GET['order_status'] == 'all') ? 'active' : '' ; ?>" data="<?php echo 'all';?>">All</a>
+                            </div>
+                            <?php foreach($order_statuses as $key => $val_name){ ?>
+                                    <div class="swiper-slide filter_status_name">
+                                        <a
+											class="hl__account-history-sort-item <?php echo $_GET['order_status'] == $key ? 'active' : '' ; ?>"
+											href="#"
+											data-param="<?php echo $_GET['order_status'];?>"
+											data="<?php echo $key;?>"
+										><?php echo $val_name;?></a>
+                                    </div>
+                            <?php } ?>
+                        </div>
+                </div>
+            </div>
+        </div>
+<?php endif ?>
+<?php
+}
+
+//orders query listen to URL parameter
+add_filter( 'woocommerce_my_account_my_orders_query', 'bbloomer_my_account_orders_filter_by_status' );
+function bbloomer_my_account_orders_filter_by_status( $args ) {
+	if(isset($_GET['order_status']) && !empty($_GET['order_status']) && $_GET['order_status'] != 'all'){
+		$order_status_get = $_GET['order_status'];
+		$order_status_replace = str_replace("_dublicate"," ",$order_status_get); //for 2 time process
+		$order_status = array($order_status_replace);
+	}else{
+		//$order_status = array_keys( wc_get_order_statuses() );
+		$order_status = array('wc-completed','wc-cancelled','wc-processing');
+	}
+    $args['status'] = $order_status;
+   return $args;
+}
+
+//My Account Orders Pagination fix
+// add_filter( 'woocommerce_get_endpoint_url', 'my_account_orders_filter_by_status_pagination', 9999, 4 );
+// function my_account_orders_filter_by_status_pagination( $url, $endpoint, $value, $permalink ) {
+//    if ( 'orders' == $endpoint && isset( $_GET['order_status'] ) && ! empty( $_GET['order_status'] ) ) {
+
+//     echo $permalink;
+//       return add_query_arg( 'order_status', $_GET['order_status'], $url );
+//    }
+//    return $url;
+// }
+
+function custom_pagination_base( $link ) {
+    // Parse the URL to get its components
+    $url_components = parse_url($link);
+    parse_str($url_components['query'], $params);
+    // Rearrange the parameters
+    $page = isset($params['page']) ? $params['page'] : null;
+    $filter_status = isset($_GET['order_status']) ? $_GET['order_status'] : null;
+    
+    // Rebuild the URL
+    $new_query = http_build_query(array('page' => $page, 'order_status' => $filter_status));
+    $new_url = $url_components['path'] . '?' . $new_query;
+
+    return $new_url;
+}
+
+add_filter('paginate_links', 'custom_pagination_base');
+
+/*not requird fields in edit-account panel in my account page*/
+add_filter( 'woocommerce_save_account_details_required_fields', 'misha_myaccount_required_fields' );
+function misha_myaccount_required_fields( $account_fields ) {
+	unset( $account_fields[ 'account_last_name' ] );
+	unset( $account_fields[ 'account_first_name' ] ); 
+	unset( $account_fields[ 'account_display_name'] );
+    unset( $account_fields[ 'account_email'] ); 
+	return $account_fields;
+} 
 
 
 

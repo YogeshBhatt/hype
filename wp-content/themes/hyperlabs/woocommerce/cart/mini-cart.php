@@ -23,7 +23,7 @@ do_action( 'woocommerce_before_mini_cart' ); ?>
 
 	<?php if ( ! WC()->cart->is_empty() ) : ?>
 	<div class="overflow-y-auto mb-4">
-		<div class="hl__filter-block" data-attr="<?php echo count( WC()->cart->get_cart() )?>"> <h2  class="hl_title">Кошик для покупок</h2> </div>
+		<div class="hl__filter-block" data-cart="<?php echo count( WC()->cart->get_cart() )?>"> <h2  class="hl_title">Кошик для покупок</h2> </div>
 		<ul class="woocommerce-mini-cart cart_list hl_minicard_list product_list_widget <?php echo esc_attr( $args['list_class'] ); ?>">
 			<?php
 			do_action( 'woocommerce_before_mini_cart_contents' );
@@ -62,10 +62,12 @@ do_action( 'woocommerce_before_mini_cart' ); ?>
 						<?php
 
 						$product = $cart_item['data'];
-
+						$image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_id ), 'single-post-thumbnail' );
 							// Display product image
-							$thumbnail = $product->get_image();
-							echo '<div class="hl__product_img mini-cart-product-image">' . $thumbnail . '</div> <div class="hl_cart_content">';
+							$thumbnail = $product->get_image('thumbnail');
+							// echo '<div class="hl__product_img mini-cart-product-image">' . $thumbnail . '</div> <div class="hl_cart_content">';
+							echo '<div class="hl__product_img mini-cart-product-image"><img src="'.$image[0].'"></div> <div class="hl_cart_content">';
+
 
 							// Display product name
 							echo '<h3 class="hl__product_title">' . $product->get_title() . '</h3>';
@@ -167,3 +169,19 @@ do_action( 'woocommerce_before_mini_cart' ); ?>
 <?php endif; ?>
 
 <?php do_action( 'woocommerce_after_mini_cart' ); ?>
+<?php if(is_cart() || is_checkout()): ?>
+<script>
+    jQuery(document).on('click', '.remove_from_cart_button', function(e) {
+       var check = jQuery('.hl__filter-block').attr('data-cart');
+        if(check == 1)
+        {
+			setTimeout(function() {
+				window.location.href = window.location.href;
+				window.location.reload();
+				
+			}, 1500);
+        }
+        
+    })
+</script>
+<?php endif;?>

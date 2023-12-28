@@ -119,7 +119,8 @@ function woocommerce_custom_single_add_to_cart_text() {
 //favorite button add
 add_action('woocommerce_after_add_to_cart_button','custom_favorite_product_button');
 function custom_favorite_product_button(){
-	echo '<button class= "hl__button hl__button--green hl_button_bg__white mt-4">Додати в обране</button>';
+	$productId = get_the_ID();
+	echo '<button class= "hl__button hl__button--green hl_button_bg__white mt-4 add-to-wishlist" data-product-id="'.$productId.'">Додати в обране</button>';
 }
 /*product not found */
 remove_action('woocommerce_no_products_found','wc_no_products_found',10);
@@ -156,9 +157,9 @@ function custom_attribute_popup_html() {
 			$variationSlugArray = [];
 			foreach($all_attribute as $key => $value)
 			{
-				// $attribute_data = $value->get_data();
-				// if($value['name'] != 'color' && $value['name'] != 'pa_color') {
-					$brand_terms = get_terms( $value['name'] );
+					$productid = $product->id;
+					$brand_terms = get_the_terms($productid, $value['name'] );
+			
 					if (str_contains($value['name'], 'pa_')) {
 						foreach($brand_terms as $k => $v)
 						{
@@ -169,12 +170,10 @@ function custom_attribute_popup_html() {
 						$variations_arr = $product->get_available_variations();
 						foreach($variations_arr as $k => $v)
 						{
-
 							$variationArray[$value['name']][$k] = $v['attributes']['attribute_'.$value['name']];
 							$variationSlugArray[$value['name']][$k] = $v['attributes']['attribute_'.$value['name']];
 						}
 					}
-				// }
 				?>
 				<?php //if($value['name'] != 'color' && $value['name'] != 'pa_color') {
 					if(str_contains($value['name'], 'pa_'))
@@ -188,7 +187,7 @@ function custom_attribute_popup_html() {
 					<?php if($value['name'] != 'color' && $value['name'] != 'pa_color'):?>
 						<p class="single_product_size selected_attribute_list right-arrow <?php echo $value['name'];?>" data-attribute-list="<?php echo $value['name'];?>"><?php echo $name;?>: <span><?php if(isset($default_variation_attributes[$value['name']])) echo $default_variation_attributes[$value['name']]; else echo '';?></span></p>
 					<?php else:?>
-						<p class="single_product_size single__product_color selected_attribute_list right-arrow <?php echo $value['name'];?>" data-attribute-list="<?php echo $value['name'];?>"><?php echo $name;?>:<span class="color" style="background-color: <?php if(isset($default_variation_attributes[$value['name']])) echo $default_variation_attributes[$value['name']]; else echo '';?>"></span></p>
+						<p class="single_product_size single__product_color selected_attribute_list right-arrow <?php echo $value['name'];?>" data-attr-color="<?php echo $default_variation_attributes[$value['name']]; ?>" data-attribute-list="<?php echo $value['name'];?>"><?php echo $name;?>:<span class="color" style="background-color: <?php if(isset($default_variation_attributes[$value['name']])) echo $default_variation_attributes[$value['name']]; else echo '';?>"></span></p>
 					<?php endif;?>
 				<?php }?>
 			<?php //} ?>

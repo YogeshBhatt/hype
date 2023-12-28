@@ -155,6 +155,7 @@ function hyperlabs_scripts() {
 	wp_enqueue_script( 'jquery_ui_js', get_template_directory_uri(). '/js/jquery-ui.min.js', array(), time() );
 	wp_enqueue_script( 'daterangepicker_min_js', get_template_directory_uri() . '/js/daterangepicker.min.js', array(), time() );
 	wp_enqueue_script( 'select2-js', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js', array(), time() );
+	wp_enqueue_script( 'validation-js', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.9.0/jquery.validate.min.js', array(), time() );
 
 	//custom js
 	wp_enqueue_script( 'hyperlabs-custom', get_template_directory_uri() . '/js/custom.js', array(), time(), true );
@@ -179,29 +180,16 @@ function hyperlabs_scripts() {
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
-	// wp_enqueue_script(
-	// 	'custom-single-product', // name your script so that you can attach other scripts and de-register, etc.
-	// 	get_stylesheet_directory_uri() . '/js/custom.js', // this is the location of your script file
-	// 	array('jquery') // this array lists the scripts upon which your script depends
-	//  );
-	 wp_enqueue_script('quantity-field', get_stylesheet_directory_uri() . '/js/custom.js', array('jquery'), null, true);
-	wp_localize_script('quantity-field', 'myScriptData', array(
+	wp_localize_script('hyperlabs-custom', 'myScriptData', array(
 		'siteUrl' => get_site_url(),
 		'ajaxUrl' => admin_url('admin-ajax.php'),
+		'nonce'    => wp_create_nonce('custom_mini_cart_nonce'),
 	));
 
 }
 
 add_action( 'wp_enqueue_scripts', 'hyperlabs_scripts' );
 
-function enqueue_custom_mini_cart_script() {
-    wp_enqueue_script('custom-mini-cart-script', get_template_directory_uri() . '/js/custom.js', array('jquery'), null, true);
-    wp_localize_script('custom-mini-cart-script', 'custom_mini_cart_params', array(
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce'    => wp_create_nonce('custom_mini_cart_nonce'),
-    ));
-}
-add_action('wp_enqueue_scripts', 'enqueue_custom_mini_cart_script');
 
 
 
@@ -327,5 +315,115 @@ add_filter( 'woocommerce_redirect_single_search_result', '__return_false' );
 require_once get_template_directory() . '/costume-functions/costume-lost-password-function.php';
 
 
+function add_to_wishlist() {
+    $product_id = $_POST['product_id'];
+	// print_r($product_id); exit;
+    // Get current user's wishlist
+    $user_id = get_current_user_id();
+    $wishlist = get_user_meta($user_id, 'my_user_wishlist', true);
+    if (!$wishlist) {
+        $wishlist = array();
+    }
 
+    // Add product to wishlist
+    if (!in_array($product_id, $wishlist)) {
+        $wishlist[] = $product_id;
+        update_user_meta($user_id, 'my_user_wishlist', $wishlist);
+        wp_send_json_success('Product added to wishlist');
+    } else {
+        wp_send_json_error('Product already in wishlist');
+    }
+
+	// print_r($wishlist);
+    wp_die();
+}
+add_action('wp_ajax_add_to_wishlist', 'add_to_wishlist');
+add_action('wp_ajax_nopriv_add_to_wishlist', 'add_to_wishlist'); // If you want to allow non-logged-in users
+
+
+//favorite product add here
+function custom_selected_products_panel_content() {
+    $user_id = get_current_user_id();
+    $wishlist = get_user_meta($user_id, 'my_user_wishlist', true);
+    
+    if (!empty($wishlist) && is_array($wishlist)) {
+		echo '<div class="hl__account-layout-right">';
+		echo '<div class="hl__account-info-adaptive-menu d-lg-none d-block">';
+		echo'<div class="swiper swiper__account-adaptive-menu swiper-initialized swiper-horizontal">';
+		echo '<div class="swiper-wrapper" id="swiper-wrapper-35f105101a5812efd5" aria-live="polite" style="transition-duration: 0ms; transition-delay: 0ms;">';
+		echo  '<div class="swiper-slide"><a href="#">Персональна інформація </a></div>';
+		echo '<div class="swiper-slide"><a href="#">Історія замовлень</a></div>';
+		echo   '<div class="swiper-slide"><a href="#" class="active">Вибрані товари</a></div>';
+		echo   '<div class="swiper-slide"><a href="#">Пароль</a></div></div>';
+		echo '<span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>';
+		echo '</div>';
+		echo '<div class="hl__account-favorite d-grid">';
+        foreach ($wishlist as $product_id) {
+            $product = wc_get_product($product_id);
+            if ($product) {
+                // Display the product details
+				echo '<div class="hl__product">';
+				echo  '<div class="hl__product-images">';
+				echo   '<div class="hl__product-images-big-image">';
+				echo   '<img src="'.wp_get_attachment_url($product->get_image_id()).'" alt='.$product->get_name().'" />';
+				echo '</div>';
+				echo '<a href="#" class="hl__product-images-delete remove-from-wishlist" data-product-id="'.$product_id.'">';
+				echo '<img src="'.get_template_directory_uri().'/images/svg/delete.svg" alt="delete product from favorites">';
+				echo  '</a>';
+				echo  '</div>';
+				echo  '<div class="hl__product-info">';
+				echo  '<div class="hl__product-name">'.$product->get_name().'';
+				echo   '</div>';
+				echo   '<div class="hl__product-price">';
+				echo    '<span>'.wc_price($product->get_price()).'</span>';
+				echo   '</div>';
+				echo '<a href="'.get_permalink($product_id).'" class="hl__product-add d-inline-flex align-items-center">';
+				echo   '<img src="'.get_template_directory_uri().'/images/svg/more-arrow.svg" alt="Arrow for more" />';
+				echo    '<span>'._('купити зараз').'</span>';
+				echo   '</a>';
+				echo '</div>';
+				echo '</div>';
+            }
+        }
+		echo '</div>';
+		echo '</div>';
+    } else {
+        echo '<div class="hl__account-empty">';
+		echo '<div class="hl__account-empty-wrap">';
+        echo '<div class="hl__account-empty-image">';
+        echo '<img src="'.get_template_directory_uri().'/images/account/empty-favorites.png" alt="image for empty block in favorite">';
+    	echo '</div>';
+        echo '<div class="hl__account-empty-text">На даний момент у вас немає вибраних товарів</div>';
+        echo '<div class="hl__account-empty-button"><a href="'.get_permalink( wc_get_page_id( 'shop' ) ).'" class="hl__button hl__button--black hl__button--full">Почати покупки</a></div>';
+        echo '</div>';
+        echo '</div>';
+    }
+}
+add_action('woocommerce_account_selected-products_endpoint', 'custom_selected_products_panel_content');
+
+
+function remove_from_wishlist() {
+	$product_id = $_POST['product_id'];
+
+	$user_id = get_current_user_id();
+	$wishlist = get_user_meta($user_id, 'my_user_wishlist', true);
+
+	if (!is_array($wishlist)) {
+		$wishlist = array();
+	}
+
+	if (($key = array_search($product_id, $wishlist)) !== false) {
+		unset($wishlist[$key]);
+	}
+
+	update_user_meta($user_id, 'my_user_wishlist', $wishlist);
+
+	wp_send_json_success('Product removed successfully.');
+}
+
+add_action('wp_ajax_remove_from_wishlist', 'remove_from_wishlist');
+add_action('wp_ajax_nopriv_remove_from_wishlist', 'remove_from_wishlist'); // If you want non-logged in users to use this
+
+
+//custom order orite product add here
 

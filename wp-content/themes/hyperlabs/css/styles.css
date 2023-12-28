@@ -550,7 +550,8 @@ p {
   top: 0;
   z-index: 1;
 }
-.hl__auth-item-checkbox-label img {
+.hl__auth-item-checkbox-label img,
+.hl__auth-item-checkbox-label svg {
   opacity: 0;
   width: 24px;
   height: 24px;
@@ -560,7 +561,8 @@ p {
   z-index: 5;
   transition: opacity 0.3s ease;
 }
-.hl__auth-item-checkbox:checked + .hl__auth-item-checkbox-label img {
+.hl__auth-item-checkbox:checked + .hl__auth-item-checkbox-label img,
+.hl__auth-item-checkbox:checked + .hl__auth-item-checkbox-label svg {
   opacity: 1;
 }
 .hl__auth-item-error,
@@ -1630,7 +1632,8 @@ p {
   border: none;
 }
 .hl__account-form-col .hl__auth-item-checkbox-label:before,
-.hl__account-form-col .hl__auth-item-checkbox-label img {
+.hl__account-form-col .hl__auth-item-checkbox-label img,
+.hl__account-form-col .hl__auth-item-checkbox-label svg {
   border: 1px solid rgba(197, 197, 197, 1);
 }
 #goToForgetPassword {
@@ -1686,6 +1689,107 @@ p {
 .hl__view--success-password-recovery .hl__popup--success-password-recovery,
 .hl__view--error-popup .hl__popup--error {
   display: flex;
+}
+.hl__account-history-table {
+  margin-bottom: 40px;
+  overflow-x: auto;
+} 
+.hl__account-history-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.hl__account-history-table th,
+.hl__account-history-table td {
+  border: none;
+  padding: 12px 0;
+  text-align: left;
+  white-space: nowrap;
+}
+/* .hl__account-history-table th:first-child,
+.hl__account-history-table td:first-child {
+  min-width: 200px;
+  white-space: normal;
+} */
+.hl__account-history-table th:nth-child(5),
+.hl__account-history-table th:nth-child(6),
+.hl__account-history-table td:nth-child(5),
+.hl__account-history-table td:nth-child(6) {
+  text-align: center;
+}
+.hl__account-history-table tr:nth-child(even) {
+  background-color: rgba(249, 249, 249, 1);
+}
+.woocommerce-account .hl__account-history-table th + th,
+.woocommerce-account .hl__account-history-table td + td {
+  /* padding-left: 32px; */
+  text-align: center !important;
+}
+.hl__account-history-table th {
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--light-grey-text);
+}
+.hl__account-history-table th:first-child {
+  padding-left: 12px;
+}
+.hl__account-history-table th:last-child {
+  padding-right: 12px;
+  text-align: right;
+}
+.hl__account-history-table td:first-child {
+  /* width: 100%; */
+  padding-left: 12px;
+}
+.hl__account-history-table td:last-child {
+  padding-right: 12px;
+}
+.hl__account-history-item-img {
+  width: 60px;
+  min-width: 60px;
+  height: 60px;
+}
+.hl__account-history-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hl__account-history-item {
+  gap: 16px;
+}
+.hl__account-history-item-img {
+  width: 60px;
+  min-width: 60px;
+  height: 60px;
+}
+.hl__account-history-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hl__account-history-item-text {
+  font-weight: 600;
+  color: var(--black);
+}
+.hl__account-history-badge {
+  padding: 5px 12px 4px 12px;
+  border-radius: 20px;
+  line-height: 1.4;
+}
+.hl__account-history-badge.completed {
+  background-color: rgba(224, 249, 238, 1);
+  color: rgba(53, 144, 122, 1);
+}
+.hl__account-history-badge.pending.payment{
+  background-color: rgba(255, 240, 195, 1);
+  color: rgba(200, 84, 0, 1);
+}
+.hl__account-history-badge.processing{
+  background-color: rgba(253, 255, 188, 1);
+  color: rgba(154, 129, 0, 1);
+}
+.hl__account-history-badge.cancelled {
+  background-color: rgba(215, 52, 0, 0.1);
+  color: rgba(227, 50, 50, 1);
 }
 
 /* BUTTON */
@@ -2682,3 +2786,54 @@ p {
     margin-top: 16px;
   }
 }
+
+.hl__account-favorite {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+.hl__product-images {
+  aspect-ratio: 380 / 510;
+  margin-bottom: 20px;
+  position: relative;
+}
+.hl__product-images-big-image {
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.hl__product-images-delete {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 10;
+}
+@media (max-width:1199px){
+  .hl__account-favorite {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+.hl__account-empty-image img {
+  max-width: 100%;
+}
+.hl__account-empty-wrap {
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hl__account-empty-image {
+  margin-bottom: 40px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hl__account-empty-text {
+  margin-bottom: 40px;
+  color: var(--light-grey-text);
+}
+.hl__account-empty {
+  text-align: center;
+}
+

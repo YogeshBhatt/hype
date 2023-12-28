@@ -77,4 +77,61 @@ jQuery(document).ready(function($) {
 
     // })
 
+    /* my account order filter**********************************/
+    var url = window.location.href; 
+    var status = "";
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+			var sPageURL = window.location.search.substring(1),
+				sURLVariables = sPageURL.split('&'),
+				sParameterName,
+				i;
+			console.log(sPageURL);
+			for (i = 0; i < sURLVariables.length; i++) {
+				sParameterName = sURLVariables[i].split('=');
+
+				if (sParameterName[0] === sParam) {
+					return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+				}
+			}
+			return false;
+		};
+    $('#filter_order_history .filter_status_name a').each(function(){
+      $(this).click(function(e){
+          e.preventDefault();
+          $("#filter_order_history .filter_status_name").removeClass('active'); 
+          $(this).addClass('active');
+          status = $(this).attr('data');
+          console.log(status);
+          if(getUrlParameter('order_status') != false) {
+            var text = 'order_status='+getUrlParameter('order_status');
+              url = url.replace(text, 'order_status='+status);
+            window.location.href = url;
+          } else {
+            if (window.location.href.indexOf("?") > -1) {
+                window.location.href = url+'&order_status='+status;
+            }else{
+              window.location.href = url+'?order_status='+status;
+            }
+          }
+      })
+   })
+   /* END my account order filter**********************************/
+   $("#billing_edit_address").validate({
+        rules: {
+          checkboxAccountAgreement: "required",
+        },
+        messages: {
+          checkboxAccountAgreement: "checkbox requied"
+        },
+        // errorElement : 'div',
+        // errorLabelContainer: '.errorTxt'
+
+        errorPlacement: function(error, element) {
+          $(element).parent().parent().find('div.custom_error_checkbox').append(error)
+          // error.append('.custom_error_checkbox div');
+        },
+   });
+
+
 });
